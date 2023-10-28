@@ -1,2 +1,7 @@
 server:
   port: 9075
+qiniu:
+  accessKey:
+  secretKey:
+  bucket:
+  cdnUrl:
