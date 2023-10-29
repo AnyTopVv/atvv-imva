@@ -1,7 +1,8 @@
 package com.lazysun.imva.utils;
 
-import com.lazysun.imva.config.QiNiuAuthPoolFactory;
+import com.lazysun.imva.config.SingletonAuth;
 import com.lazysun.imva.constant.ProviderConstant;
+import com.qiniu.common.QiniuException;
 import com.qiniu.storage.DownloadUrl;
 import com.qiniu.util.Auth;
 import org.apache.commons.pool2.impl.GenericObjectPool;
@@ -10,24 +11,19 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  * @author: zoy0
  * @date: 2023/10/28 22:28
  */
-public class QiNiuUtil{
+public class QiNiuUtil {
 
-    private static final GenericObjectPool<Auth> QI_NIU_AUTH_POOL
-            = new GenericObjectPool<>(new QiNiuAuthPoolFactory());
-
-    public static String getDownloadUrl(String fileName,long expireInSeconds){
-        Auth auth = null;
+    public static String getDownloadUrl(String fileName, Long expireInSeconds) {
+        if (expireInSeconds == null) {
+            expireInSeconds = 3600L;
+        }
+        Auth auth = SingletonAuth.getInstance();
+        long deadline = System.currentTimeMillis() / 1000 + expireInSeconds;
+        DownloadUrl url = new DownloadUrl(ProviderConstant.qiNiuConfig.getCdnUrl(), false, fileName);
         try {
-            auth = QI_NIU_AUTH_POOL.borrowObject();
-            long deadline = System.currentTimeMillis()/1000 + expireInSeconds;
-            DownloadUrl url = new DownloadUrl(ProviderConstant.qiNiuConfig.getCdnUrl(), false, fileName);
             return url.buildURL(auth, deadline);
-        } catch (Exception e) {
+        } catch (QiniuException e) {
             throw new RuntimeException(e);
-        }finally {
-            if (auth != null){
-                QI_NIU_AUTH_POOL.returnObject(auth);
-            }
         }
     }
 
