@@ -12,6 +12,11 @@ public enum ErrorCode {
     ERROR(1, "操作失败"),
     SERVER_ERROR(500, "服务器异常"),
 
+    // 用户模块
+    NO_USER(10001,"用户不存在"),
+    ERROR_PASSWORD(10002,"用户密码错误"),
+    DUPLICATE_USERNAME(10011,"用户名重复"),
+
     ;
     private final Integer code;
 

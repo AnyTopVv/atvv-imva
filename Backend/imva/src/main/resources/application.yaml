@@ -1,7 +1,23 @@
 server:
-  port: 9075
+  port: 9071
+
+spring:
+  application:
+    name: atvv-imva
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/imva?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true&allowMultiQueries=true
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+
 qiniu:
-  accessKey:
-  secretKey:
-  bucket:
-  cdnUrl:
+  accessKey: ${QINIU_ACCESSKEY}
+  secretKey: ${QINIU_SECRETKEY}
+  bucket: ${QINIU_BUCKET}
+  cdnUrl: ${QINIU_CDNURL}
+secure:
+  publicKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwl77aLZUb9z5LS+mfZu6N5NFPneLkUPdfUd+jf4fbULMtxvpVHNP0ioN33mU0Y1zYwlJpwU+HJqNsoYzeQ2jNYPmEwwA4JbyK7fyucO6vkCP11ixnaGb4oOcXo/E2igD6Q4wGK9QgmMC7kvroO0yyamYz3rAhVCQ1TlPja6HqhwIDAQAB
+  privateKey: MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALCXvtotlRv3PktL6Z9m7o3k0U+d4uRQ919R36N/h9tQsy3G+lUc0/SKg3feZTRjXNjCUmnBT4cmo2yhjN5DaM1g+YTDADglvIrt/K5w7q+QI/XWLGdoZvig5xej8TaKAPpDjAYr1CCYwLuS+ug7TLJqZjPesCFUJDVOU+NroeqHAgMBAAECgYAIlxkdm+II/jn1h7fRnTw1gs/7w35qBNZDuMPcPDProz1UGL3Mrh5RYvuKNTNPHRZDJRDFPDYWKPcCLcmgdj7+yZ0pLPr+zfOa05jA7AgzARLvHcJPl+GH0BB+1eMkwoVhrhwdbZa6TwZGohck9dVbrbMwQX2agLVIAJ4vg4n74QJBAPz01PcBQ649Aw5wSnwRD5dZ71vOXux0yyz1kSwFroFx3UPJleY33CU8VfZ3ODyp6vYrAu8imiWLSWz9trDB0YMCQQCyt7Hfk15jY9g9DXkXyXdl19JjIEDXE+258PigO560jX2480x7PTL3KgFdvJ3tvz6yUI4H0KkLSD30wSAQhEetAkB6cVygz7jeH2RaWdqEIZIFdiAZtVRXatVqRtflkj59JAuxo2Nu0705PPJzYhQTsUAttnYuIPayk7CQFGOZPchXAkAPONIvps+tS33JhXJA8mn3BLDovICJUSs4YSvsCef0nPCOZjqnbIkAwFUpdL1G2LkwWugeBkm/qkGMrT5b6chpAkEApdawSZS1X8NhgdBMnJN4nhgYPLzbaf4MjpJ0Q9dWNnQS0ilhdu7ufg3sovpxX/KfXz6u7CtLFp+bnbIZQvFs9Q==

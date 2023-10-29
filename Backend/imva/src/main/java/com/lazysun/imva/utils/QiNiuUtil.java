@@ -5,7 +5,6 @@ import com.lazysun.imva.constant.ProviderConstant;
 import com.qiniu.common.QiniuException;
 import com.qiniu.storage.DownloadUrl;
 import com.qiniu.util.Auth;
-import org.apache.commons.pool2.impl.GenericObjectPool;
 
 /**
  * @author: zoy0
@@ -13,6 +12,12 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
  */
 public class QiNiuUtil {
 
+    /**
+     * 获取cdn下载链接
+     * @param fileName 文件路径
+     * @param expireInSeconds 过期时间
+     * @return
+     */
     public static String getDownloadUrl(String fileName, Long expireInSeconds) {
         if (expireInSeconds == null) {
             expireInSeconds = 3600L;
