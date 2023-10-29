@@ -1,0 +1,117 @@
+/* 写的累死人的视频播放器 */
+.video-player {
+  position: relative;
+  flex: 1;
+  height: 100%;
+}
+
+.video-player > .video-switcher {
+  position: absolute;
+  top: 40%;
+  right: 20px;
+  height: 80px;
+  width: 36px;
+  border-radius: 18px;
+  background-color: #3e424d;
+  opacity: .5;
+}
+
+.video-player > .video-switcher:hover {
+  opacity: 1;
+}
+
+.video-player > .video-switcher > .btn-up {
+  cursor: pointer;
+  height: 40px;
+  width: 36px;
+  line-height: 40px;
+  text-align: center;
+  color: #bec1c4;
+}
+
+.video-player > .video-switcher > .btn-up:hover {
+  color: #fff;
+}
+
+.video-player > .video-switcher > .btn-up::after {
+  font-family: 'iconfont-atvv-imva';
+  content: '\e601';
+}
+
+.video-player > .video-switcher > .btn-down {
+  cursor: pointer;
+  height: 40px;
+  width: 36px;
+  line-height: 40px;
+  text-align: center;
+  color: #bec1c4;
+}
+
+.video-player > .video-switcher > .btn-down:hover {
+  color: #fff;
+}
+
+.video-player > .video-switcher > .btn-down::after {
+  font-family: 'iconfont-atvv-imva';
+  content: '\e6b3';
+}
+
+.video-player > .video-switcher > .disabled {
+  cursor: not-allowed;
+  height: 40px;
+  width: 36px;
+  line-height: 40px;
+  text-align: center;
+  color: #757880;
+}
+
+.video-player > .video-switcher > .disabled:hover {
+  color: #757880;
+}
+
+.video-player > .video-switcher > .disabled-up {
+  display: none;
+  cursor: not-allowed;
+  height: 40px;
+  width: 36px;
+  line-height: 40px;
+  text-align: center;
+  color: #757880;
+}
+
+.video-player > .video-switcher > .disabled-up:hover {
+  color: #757880;
+}
+
+.video-player > .video-switcher > .disabled-up::after {
+  font-family: 'iconfont-atvv-imva';
+  content: '\e601';
+}
+
+.video-player > .video-switcher > .disabled-down {
+  display: none;
+  cursor: not-allowed;
+  height: 40px;
+  width: 36px;
+  line-height: 40px;
+  text-align: center;
+  color: #757880;
+}
+
+.video-player > .video-switcher > .disabled-down:hover {
+  color: #757880;
+}
+
+.video-player > .video-switcher > .disabled-down::after {
+  font-family: 'iconfont-atvv-imva';
+  content: '\e6b3';
+}
+
+.video-player > .video-switcher > .display-none {
+  display: none;
+}
+
+.slider {
+  overflow: hidden;
+  border-radius: 10px;
+}
