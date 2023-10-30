@@ -3,6 +3,7 @@ import React from 'react'
 
 const VideoList: React.FC<any> = (props: { category: string }) => {
   const { category } = props;
+  console.log("current category:", category);
 
   return (
     <>
