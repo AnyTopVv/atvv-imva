@@ -4,21 +4,16 @@ import { getRecommendPageVideo } from './service';
 import throttle from '@/utils/commonUtils/throttle'
 import styles from './index.module.css';
 import PubPlayer from '@/components/PubPlayer'
-
-const contentStyle: React.CSSProperties = {
-  height: 'calc(92vh - 20px)',
-  color: '#fff',
-  lineHeight: 'calc(92vh - 20px)',
-  textAlign: 'center',
-  background: '#364d79',
-};
+import Mp4Plugin from "xgplayer-mp4"
 
 const Recommend: React.FC = () => {
   const carouselRef: any = useRef();
+  const fullScreenRef: any = useRef();
   const [videoQueue, setVideoQueue] = useState<any[]>([]);
   const [isBegin, setIsBegin] = useState<boolean>(true);
   const [isEnd, _setIsEnd] = useState<boolean>(false);
   const currentIndex: any = useRef();
+  const playerRefList: any = useRef([]);
 
   // videoQueue.current = useMemo(
   //   () => videoQueue.current.concat(latestMessage),
@@ -32,6 +27,7 @@ const Recommend: React.FC = () => {
       });
     }
     currentIndex.current = index;
+    playerRefList.current[index].play();
   }
 
   const beforeChange = (_oldIndex: number, newIndex: number) => {
@@ -40,6 +36,7 @@ const Recommend: React.FC = () => {
     } else {
       setIsBegin(false);
     }
+    playerRefList.current[_oldIndex].pause();
   }
 
   const appendVideos = (data: any) => {
@@ -54,6 +51,10 @@ const Recommend: React.FC = () => {
     carouselRef.current.slickNext();
   }
 
+  function getRef(ins: any) {
+    playerRefList.current.push(ins);
+  }
+
   useEffect(() => {
     getRecommendPageVideo().then((res) => {
       appendVideos(res?.data.data);
@@ -64,11 +65,10 @@ const Recommend: React.FC = () => {
   // useEffect(() => {
   //   console.log(videoQueue.current.length);
   // }, [currentIndex.current])
-  console.log(contentStyle);
 
   return (
     <>
-      <div className={styles.videoPlayer}>
+      <div className={styles.videoPlayer} ref={fullScreenRef}>
         <Slider // 不要用antd的走马灯，有bug
           dots={false}
           arrows={false}
@@ -77,13 +77,33 @@ const Recommend: React.FC = () => {
           infinite={false}
           afterChange={afterChange}
           beforeChange={beforeChange}
-          adaptiveHeight={true}
+          // adaptiveHeight={true}  // 开这个会有显示bug
           ref={carouselRef}
           className={styles.slider}
         >
-          {videoQueue.map((videoData: any, index) => (
-            <PubPlayer key={index} style={contentStyle} videoData={videoData} />
-          ))}
+          {videoQueue.map((videoData: { [propName: string]: string }, index) => {
+            // const PlayerRef = useRef();
+            const playerConfig = {
+              url: videoData.videoSrc,
+              poster: videoData.videoPreview,
+              autoplayMuted: index === 0 ? true : false,
+              autoplay: index === 0 ? true : false,
+              height: '100%',
+              width: '100%',
+              lang: 'zh',
+              marginControls: true,
+              cssFullscreen: false,
+              plugins: [Mp4Plugin],
+              mp4plugin: {
+                maxBufferLength: 10,
+                minBufferLength: 5,
+              },
+              // preloadTime: 10,  // 预加载固定10s的内容
+            };
+            return <div key={index}>
+              <PubPlayer getRef={getRef} playerConfig={playerConfig} videoData={videoData} index={index} />
+            </div>
+          })}
         </Slider>
         <ul className={styles.videoSwitcher}>
           <li className={isBegin ? `${styles.btnUp} ${styles.disabled}` : `${styles.btnUp}`} onClick={isBegin ? undefined : throttle(onUpClick, 500)}></li>

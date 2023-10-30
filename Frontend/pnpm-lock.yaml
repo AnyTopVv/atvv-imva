@@ -47,6 +47,9 @@ dependencies:
   xgplayer:
     specifier: ^3.0.9
     version: 3.0.9(core-js@3.33.1)
+  xgplayer-mp4:
+    specifier: ^3.0.9
+    version: 3.0.9(core-js@3.33.1)(xgplayer@3.0.9)
 
 devDependencies:
   '@types/react':
@@ -1063,6 +1066,12 @@ packages:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
 
+  /concat-typed-array@1.0.2:
+    resolution: {integrity: sha512-aC878bxeWSlrY6h60cCDwBUXpKwovZrB7+C4+VHNO1CIXW2gBLxbQ757jWtOXUscLGgYI8R84N6uy9fTJPe+0g==}
+    engines: {node: '>=0.10.0'}
+    deprecated: 'WARNING: This package has been renamed to typed-array-concat.'
+    dev: false
+
   /copy-anything@2.0.6:
     resolution: {integrity: sha512-1j20GZTsvKNkc4BY3NpMOM8tt///wY3FpIzozTOFO2ffuZcV61nojHXVKIy3WM+7ADCy5FVhdZYHYDdgTU0yJw==}
     dependencies:
@@ -1087,6 +1096,10 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
+
+  /crypto-es@1.2.7:
+    resolution: {integrity: sha512-UUqiVJ2gUuZFmbFsKmud3uuLcNP2+Opt+5ysmljycFCyhA0+T16XJmo1ev/t5kMChMqWh7IEvURNCqsg+SjZGQ==}
+    dev: false
 
   /csstype@3.1.2:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
@@ -1135,6 +1148,11 @@ packages:
   /deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
     dev: true
+
+  /deepmerge@2.2.1:
+    resolution: {integrity: sha512-R9hc1Xa/NOBi9WRVUWg19rl1UB7Tt4kuPd+thNJgFZoxXsTz7ncaPaeIm+40oSGuP33DfMb4sZt1QIGiJzC4EA==}
+    engines: {node: '>=0.10.0'}
+    dev: false
 
   /delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
@@ -2775,6 +2793,42 @@ packages:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
     dev: true
 
+  /xgplayer-mp4-loader@3.0.9(core-js@3.33.1):
+    resolution: {integrity: sha512-+JAW8YCffg6GB+kDj+3SgsSESrMPkRXNMiOBt/a6k7ahgulyVlKMgvR+hLxAHVptj3qK1CrRfXBzLNDJqL/E6A==}
+    peerDependencies:
+      core-js: '>=3.12.1'
+    dependencies:
+      core-js: 3.33.1
+      eventemitter3: 4.0.7
+      xgplayer-streaming-shared: 3.0.9(core-js@3.33.1)
+      xgplayer-transmuxer: 3.0.9(core-js@3.33.1)
+    dev: false
+
+  /xgplayer-mp4@3.0.9(core-js@3.33.1)(xgplayer@3.0.9):
+    resolution: {integrity: sha512-iCr5//W7IOdLogh/cB1Yh1R6wDVlMGsLZrXkC+tOs866BaStfsUmp/m6w6wUInZzmo9w84cb+EaRMW9Kiv4YZA==}
+    peerDependencies:
+      core-js: '>=3.12.1'
+      xgplayer: '>=3.0.0'
+    dependencies:
+      concat-typed-array: 1.0.2
+      core-js: 3.33.1
+      deepmerge: 2.2.1
+      eventemitter3: 4.0.7
+      xgplayer: 3.0.9(core-js@3.33.1)
+      xgplayer-mp4-loader: 3.0.9(core-js@3.33.1)
+      xgplayer-streaming-shared: 3.0.9(core-js@3.33.1)
+      xgplayer-transmuxer: 3.0.9(core-js@3.33.1)
+    dev: false
+
+  /xgplayer-streaming-shared@3.0.9(core-js@3.33.1):
+    resolution: {integrity: sha512-+TTH7ryj/J/BnkxpepnTb6HMd314gn+IB9k7+ML2ENRclF0+B6LIFdApgP3pA9eHiiVmNC1Yc2hO+1S+j61/Tw==}
+    peerDependencies:
+      core-js: '>=3.12.1'
+    dependencies:
+      core-js: 3.33.1
+      eventemitter3: 4.0.7
+    dev: false
+
   /xgplayer-subtitles@3.0.9(core-js@3.33.1):
     resolution: {integrity: sha512-FPD9lQ4BKixm3AKRFWpUAlEpEcHpz1tG2Y+k/CtfzwMEDGKK9fjRlxZ+ZRB2A4f2IXkT+OInbZbrDvgjdproSQ==}
     peerDependencies:
@@ -2782,6 +2836,17 @@ packages:
     dependencies:
       core-js: 3.33.1
       eventemitter3: 4.0.7
+    dev: false
+
+  /xgplayer-transmuxer@3.0.9(core-js@3.33.1):
+    resolution: {integrity: sha512-rFfNNfAOXZijN/OVnUAItZsPqnB5e1D/+f/uzqUv7zwfsSdjP7WCd9k2JGz9h8wTBWVussqYiKJkzNHEkC2RlQ==}
+    peerDependencies:
+      core-js: '>=3.12.1'
+    dependencies:
+      '@babel/runtime': 7.23.2
+      concat-typed-array: 1.0.2
+      core-js: 3.33.1
+      crypto-es: 1.2.7
     dev: false
 
   /xgplayer@3.0.9(core-js@3.33.1):

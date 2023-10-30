@@ -1,24 +1,41 @@
 import Player from 'xgplayer';
 import 'xgplayer/dist/index.min.css';
 
-import React, { CSSProperties, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
-const PubPlayer: React.FC<any> = (props: { style: CSSProperties, videoData: { [propName: string]: string } }) => {
-  const { style, videoData } = props;
+const PubPlayer: React.FC<any> = (props: { getRef: any, playerConfig: { [propName: string]: string } }) => {
+  const { getRef, playerConfig } = props;
 
-  const playerRef = useRef<any>(null);
+  const playerDomRef = useRef<any>(null);
+  const playerInsRef = useRef<any>(null);
 
   useEffect(() => {
-    console.log(style);
     const player = new Player({
-      el: playerRef.current,
-      url: videoData.videoSrc,
+      el: playerDomRef.current,
+      ...playerConfig,
     });
+    playerInsRef.current = player;
+    getRef(playerInsRef.current);
+    const content = document.querySelector('.ant-layout-content') as any;
+    const resizeObserver = new ResizeObserver(() => {
+      playerDomRef.current.style.height = (content.clientHeight - 20) + 'px';
+    })
+    resizeObserver.observe(document.body);
   }, [])
+
+  // // 对外暴露open方法，外部组件可通过modalRef.open(callback)来展示模态框
+  // useImperativeHandle(modalRef, () => {	// 这里传入的ref是通过props传进来的
+  //   return {
+  //     open: (callback: Function) => {
+  //       setIsModalOpen(true);
+  //       callback && callback()
+  //     }
+  //   };
+  // });
 
   return (
     <>
-      <div ref={playerRef}></div>
+      <div ref={playerDomRef}></div>
     </>
   )
 }

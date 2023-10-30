@@ -1,7 +1,8 @@
-import { Button, Input, Layout, Menu } from 'antd';
+import { Button, Input, Layout, Menu, Image } from 'antd';
 import SiderRouters from '@/routes/SiderRoutes';
 import { meunItems } from '@/routes/routesConfig';
 import type { FC, ReactElement } from 'react';
+import atvvWordsSrc from '@/assets/atvv-words.png';
 
 const { Header, Sider, Content } = Layout;
 
@@ -17,10 +18,11 @@ const BaseLayout: FC = (): ReactElement => {
         }}
         theme='light' trigger={null}
       >
-        ATVV-IMVA
-        <Menu mode='inline' items={meunItems} />
+        <div style={{ padding: '20px', display: 'flex', justifyContent: 'center' }}>
+          <Image alt="ATVV-IMVA" preview={false} src={atvvWordsSrc} height={50} />
+        </div>
+        <Menu mode='inline' items={meunItems} style={{ padding: '5px' }} />
       </Sider>
-
       <Layout>
         <Header
           style={{

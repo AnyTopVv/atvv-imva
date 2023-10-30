@@ -4,7 +4,7 @@ import VideoList from '@/components/VideoList'
 const Fasion: React.FC = () => {
   return (
     <>
-      <VideoList />
+      <VideoList category={'fasion'} />
     </>
   )
 }
