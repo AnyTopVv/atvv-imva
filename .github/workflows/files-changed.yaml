@@ -1,0 +1,29 @@
+name: files-changed
+
+on:
+  workflow_call:
+    outputs:
+      backend:
+        value: ${{ jobs.detect.outputs.backend }}
+      frontend:
+        value: ${{ jobs.detect.outputs.frontend }}
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      backend: ${{ steps.changes.outputs.backend }}
+      frontend: ${{ steps.changes.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            backend:
+              - "Backend/*"
+
+            frontend:
+              - "Frontend/*"
