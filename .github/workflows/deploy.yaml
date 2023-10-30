@@ -1,0 +1,65 @@
+name: deploy frontend
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  files-changed:
+    uses: ./.github/workflows/files-changed.yaml
+
+  deploy-backend:
+    if: needs.files-changed.outputs.backend == 'true'
+    needs: files-changed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+
+
+  deploy-frontend:
+    if: needs.files-changed.outputs.frontend == 'true'
+    needs: files-changed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'pnpm'
+          cache-dependency-path: ./Frontend/package.json
+
+
+      - name: install and build
+        run: |
+          cd Frontend
+          pnpm install
+          pnpm run build
+
+      - name: ZeroTier
+        uses: zerotier/github-action@v1.0.1
+        with:
+          network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
+          auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+
+      - name: deploy
+        uses: easingthemes/ssh-deploy@v4.1.0
+        with:
+          REMOTE_HOST: ${{ secrets.HOST }} # 远程服务器地址，从 secrets 中读取
+          REMOTE_USER: ${{ secrets.NAME }} # 远程服务器用户名，从 secrets 中读取
+          REMOTE_PORT: ${{ secrets.PORT }} # 远程服务器端口号，从 secrets 中读取
+          SSH_PRIVATE_KEY: ${{ secrets.KEY }} # SSH 密钥，从 secrets 中读取
+          SOURCE: "./Frontend/dist" # 要拷贝的文件路径
+          TARGET: "/tmp/1024/frontend"
+          SCRIPT_AFTER: |
+            cd ~/atvv-imva/frontend
+            rm -rf *
+            mv /tmp/1024/frontend/dist/* .
