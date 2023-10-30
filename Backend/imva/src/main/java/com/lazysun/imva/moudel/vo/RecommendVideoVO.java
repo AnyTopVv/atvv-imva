@@ -1,5 +1,6 @@
 package com.lazysun.imva.moudel.vo;
 
+import com.lazysun.imva.moudel.dto.VideoDetailDto;
 import lombok.Data;
 
 import java.util.UUID;
@@ -23,20 +24,20 @@ public class RecommendVideoVO {
 
     private String category;
 
-    private String uuid;
+    private Long uuid;
 
-    private String likes;
+    private Integer likes;
 
-    private String stars;
+    private Integer stars;
 
-    public static RecommendVideoVO test(){
+    public static RecommendVideoVO build(VideoDetailDto video) {
         RecommendVideoVO recommendVideoVO = new RecommendVideoVO();
-        recommendVideoVO.setAuthor("zoy0");
-        recommendVideoVO.setCategory("娱乐");
-        recommendVideoVO.setVideoPreview("https://img.lazysun.me/202310212220891.jpg");
-        recommendVideoVO.setLikes("0");
-        recommendVideoVO.setStars("0");
-        recommendVideoVO.setAuthorAvatarSrc("https://img.lazysun.me/cover-202310092119179.webp");
+        recommendVideoVO.setUuid(video.getId());
+        recommendVideoVO.setCategory(video.getCategory());
+        recommendVideoVO.setAuthor(video.getAuthor());
+        recommendVideoVO.setStars(video.getStar());
+        recommendVideoVO.setTitle(video.getVideoName());
+        recommendVideoVO.setLikes(video.getLike());
         return recommendVideoVO;
     }
 }
