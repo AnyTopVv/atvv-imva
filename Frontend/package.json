@@ -17,6 +17,7 @@
     "antd": "^5.9.0",
     "axios": "^1.5.0",
     "less": "^4.2.0",
+    "rc-virtual-list": "^3.11.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.2",
