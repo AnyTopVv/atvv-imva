@@ -21,6 +21,9 @@ const PubPlayer: React.FC<any> = (props: { getRef: any, playerConfig: { [propNam
       playerDomRef.current.style.height = (content.clientHeight - 20) + 'px';
     })
     resizeObserver.observe(document.body);
+    return () => {
+      resizeObserver.unobserve(document.body);
+    }
   }, [])
 
   // // 对外暴露open方法，外部组件可通过modalRef.open(callback)来展示模态框
