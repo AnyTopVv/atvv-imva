@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface VideoService {
     List<RecommendVideoVO> getRecommendVideo();
+
+    String findUploadIdByMD5(String md5, String fileExtension);
 }

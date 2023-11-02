@@ -7,7 +7,6 @@ import com.qiniu.common.QiniuException;
 import com.qiniu.http.Client;
 import com.qiniu.storage.*;
 import com.qiniu.util.Auth;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -41,9 +40,9 @@ public class QiNiuUtil {
         }
     }
 
-    public static String getUploadId(String fileName) throws QiniuException {
+    public static String getUploadId(String path, String fileName) throws QiniuException {
         ApiUploadV2InitUpload.Request initUploadRequest = new ApiUploadV2InitUpload.Request(ProviderConstant.qiNiuConfig.getRegionUploadUrl(), QiNiuParameter.getUploadToken())
-                .setKey(fileName);
+                .setKey(path + "/" + fileName);
         ApiUploadV2InitUpload.Response initUploadResponse = QiNiuParameter.getApiUploadV2InitUpload().request(initUploadRequest);
         return initUploadResponse.getUploadId();
     }
@@ -65,7 +64,7 @@ public class QiNiuUtil {
         byte[] partData = getFilByte(file);
         PartInfo partInfo = new PartInfo();
         ApiUploadV2UploadPart.Request uploadPartRequest = new ApiUploadV2UploadPart.Request(urlPrefix, token, uploadId, partNumber)
-                .setKey(saveFileName)
+                .setKey(path + "/" + saveFileName)
                 .setUploadData(partData, 0, partData.length, null);
 
         ApiUploadV2UploadPart.Response uploadPartResponse = QiNiuParameter.getApiUploadV2UploadPart().request(uploadPartRequest);
@@ -101,7 +100,7 @@ public class QiNiuUtil {
         customParam.put("x:foo", "foo-Value");
 
         ApiUploadV2CompleteUpload.Request completeUploadRequest = new ApiUploadV2CompleteUpload.Request(urlPrefix, token, uploadId, partInfoMapList)
-                .setKey(saveFileName)
+                .setKey(path + "/" + saveFileName)
                 .setFileName(saveFileName)
                 .setCustomParam(customParam);
 
