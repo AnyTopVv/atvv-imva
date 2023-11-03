@@ -108,6 +108,16 @@ public class QiNiuUtil {
         QiNiuParameter.getApiUploadV2CompleteUpload().request(completeUploadRequest);
     }
 
+    /**
+     * 移动文件
+     * @param key1 被移动文件
+     * @param key2 移动位置
+     */
+    public static void moveFile(String key1,String key2) throws QiniuException {
+        BucketManager bucketManager = QiNiuParameter.getBucketManager();
+        String bucket = ProviderConstant.qiNiuConfig.getBucket();
+        bucketManager.move(bucket,key1,bucket,key2);
+    }
 
     /**
      * 获取文件的字节码数组
@@ -155,6 +165,8 @@ public class QiNiuUtil {
 
         private static ApiUploadV2CompleteUpload apiUploadV2CompleteUpload;
 
+        private static BucketManager bucketManager;
+
         /**
          * 获取上传token，避免反复创建
          *
@@ -192,6 +204,14 @@ public class QiNiuUtil {
                 apiUploadV2CompleteUpload = new ApiUploadV2CompleteUpload(client);
             }
             return apiUploadV2CompleteUpload;
+        }
+
+        private static BucketManager getBucketManager(){
+            if (Objects.isNull(bucketManager)) {
+                Configuration configuration = new Configuration();
+                bucketManager = new BucketManager(SingletonAuth.getInstance(),configuration);
+            }
+            return bucketManager;
         }
 
         private static void refreshToken() {

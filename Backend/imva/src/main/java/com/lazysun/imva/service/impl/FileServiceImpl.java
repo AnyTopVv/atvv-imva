@@ -36,7 +36,8 @@ public class FileServiceImpl implements FileService {
     public UploadDetailVO findUploadDetailByMD5(String md5, String fileExtension) {
         Long userId = 2L;
         String uploadId = tempUploadFileDao.findUploadIdByMD5(md5, userId);
-        if (Objects.isNull(uploadId)) {
+        Set<Object> partInfosSet = RedisUtil.sGet(RedisConstant.getPartInfosSetKey(uploadId));
+        if (Objects.isNull(uploadId) || partInfosSet.isEmpty()) {
             String fileName = UUID.randomUUID() + "." + fileExtension;
             try {
                 uploadId = QiNiuUtil.getUploadId(FileConstant.TEMP_FILE_VIDEO_PATH, fileName);
@@ -44,9 +45,8 @@ public class FileServiceImpl implements FileService {
                 e.printStackTrace();
                 throw new ImvaServiceException(ErrorCode.GET_UPLOAD_ID_ERROR);
             }
-            tempUploadFileDao.insert(new TempUploadFile(uploadId,md5,userId,fileName));
+            tempUploadFileDao.insertOverlay(new TempUploadFile(uploadId,md5,userId,fileName));
         }
-        Set<Object> partInfosSet = RedisUtil.sGet(RedisConstant.getPartInfosSetKey(uploadId));
         return new UploadDetailVO(uploadId, partInfosSet.stream().map(o -> ((PartInfo)o).getPartNumber()).collect(Collectors.toSet()));
     }
 
@@ -55,14 +55,14 @@ public class FileServiceImpl implements FileService {
         String filename = tempUploadFileDao.getFileNameByUploadId(fileChunksDto.getUploadId());
         try {
             PartInfo partInfo = QiNiuUtil.uploadMultiPartFile(fileChunksDto.getUploadId(), fileChunksDto.getFile(), FileConstant.TEMP_FILE_VIDEO_PATH, filename, fileChunksDto.getIndex());
-            RedisUtil.sSet(RedisConstant.getPartInfosSetKey(fileChunksDto.getUploadId()),RedisConstant.COMMON_EXPIRE_TIME,partInfo);
+            RedisUtil.sSetAndTime(RedisConstant.getPartInfosSetKey(fileChunksDto.getUploadId()),RedisConstant.COMMON_EXPIRE_TIME,partInfo);
         } catch (IOException e) {
             throw new ImvaServiceException(ErrorCode.FILE_ERROR_UPLOAD);
         }
         if (RedisUtil.sGetSetSize(RedisConstant.getPartInfosSetKey(fileChunksDto.getUploadId())) == fileChunksDto.getTotalChunk()) {
             try {
                 Set<Object> partInfosSet = RedisUtil.sGet(RedisConstant.getPartInfosSetKey(fileChunksDto.getUploadId()));
-                QiNiuUtil.assembleUploadFile(fileChunksDto.getUploadId(), partInfosSet.stream().map(o -> (PartInfo) o).sorted(Comparator.comparingInt(PartInfo::getPartNumber)).collect(Collectors.toList()), "video/video", filename);
+                QiNiuUtil.assembleUploadFile(fileChunksDto.getUploadId(), partInfosSet.stream().map(o -> (PartInfo) o).sorted(Comparator.comparingInt(PartInfo::getPartNumber)).collect(Collectors.toList()), FileConstant.TEMP_FILE_VIDEO_PATH, filename);
                 tempUploadFileDao.deleteByUploadId(fileChunksDto.getUploadId());
             } catch (IOException e) {
                 throw new ImvaServiceException(ErrorCode.FILE_ERROR_ASSEMBLE);

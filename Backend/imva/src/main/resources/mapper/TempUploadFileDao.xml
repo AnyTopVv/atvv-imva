@@ -9,8 +9,10 @@
     </select>
 
 
-    <insert id="insert">
-        INSERT INTO temp_upload_file (upload_id, md5, user_id, file_name, enable) VALUES (#{uploadId}, #{md5}, #{userId}, #{fileName}, 0);
+    <insert id="insertOverlay">
+        INSERT INTO temp_upload_file (upload_id, md5, user_id, file_name, enable)
+        VALUES (#{uploadId}, #{md5}, #{userId}, #{fileName}, 0)
+        ON DUPLICATE KEY UPDATE upload_id = #{uploadId} , file_name = #{fileName}
     </insert>
 
 
@@ -19,7 +21,12 @@
     </select>
 
 
-    <delete id="deleteByUploadId">
+    <update id="deleteByUploadId">
         UPDATE temp_upload_file SET enable = id WHERE upload_id = #{uploadId}
-    </delete>
+    </update>
+
+
+    <select id="getFileNameByMD5" resultType="java.lang.String">
+        SELECT file_name FROM temp_upload_file WHERE user_id = #{userId} AND md5 = #{md5}
+    </select>
 </mapper>

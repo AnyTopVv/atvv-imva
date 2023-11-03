@@ -13,9 +13,11 @@ public interface TempUploadFileDao {
 
     String findUploadIdByMD5(@Param("md5") String md5, @Param("userId") Long userId);
 
-    int insert(TempUploadFile tempUploadFile);
+    int insertOverlay(TempUploadFile tempUploadFile);
 
     String getFileNameByUploadId(@Param("uploadId") String uploadId);
 
     int deleteByUploadId(@Param("uploadId") String uploadId);
+
+    String getFileNameByMD5(@Param("md5") String md5, @Param("userId") Long userId);
 }

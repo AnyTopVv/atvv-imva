@@ -22,5 +22,5 @@ public class UpLoadVideoDto {
     /**
      * 文件md5
      */
-    private String tVideoId;
+    private String md5;
 }

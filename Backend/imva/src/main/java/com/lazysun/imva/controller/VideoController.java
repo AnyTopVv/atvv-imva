@@ -28,7 +28,8 @@ public class VideoController {
 
     @PostMapping("/upload")
     public ResponseVO uploadVideo(@RequestBody UpLoadVideoDto upLoadVideoDto){
-        return null;
+        videoService.uploadVideo(upLoadVideoDto);
+        return  ResponseVO.success();
     }
 
 }

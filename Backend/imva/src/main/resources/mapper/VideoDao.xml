@@ -50,6 +50,7 @@
 
 
     <insert id="insert">
-
+        INSERT INTO video (video_name, file_path, preview_path, author_id, category_id, `like`, star)
+        VALUES (#{videoName}, #{filePath}, #{previewPath}, #{authorId}, #{categoryId}, #{like}, #{star});
     </insert>
 </mapper>
