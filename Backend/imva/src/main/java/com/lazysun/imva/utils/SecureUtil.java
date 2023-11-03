@@ -22,6 +22,11 @@ public class SecureUtil {
 
     private static final String RSA_PRIVATE_KEY = ProviderConstant.secureConfig.getPrivateKey();
 
+    /**
+     * rsa解密
+     * @param text 密文
+     * @return
+     */
     public static String rsaDecrypt(String text){
         try {
             return decrypt(text, RSA_PRIVATE_KEY);
@@ -30,6 +35,11 @@ public class SecureUtil {
         }
     }
 
+    /**
+     * md5 加密
+     * @param text
+     * @return
+     */
     public static String md5Encrypt(String text){
         return SaSecureUtil.md5(text);
     }

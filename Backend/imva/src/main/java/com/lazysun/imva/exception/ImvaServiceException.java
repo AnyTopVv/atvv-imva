@@ -10,8 +10,14 @@ import lombok.Data;
  */
 @Data
 public class ImvaServiceException extends RuntimeException{
+    /**
+     * 错误码
+     */
     private Integer errorCode;
 
+    /**
+     * 错误信息
+     */
     private String errorMessage;
 
     public ImvaServiceException(String errorMessage) {

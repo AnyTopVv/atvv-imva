@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * @author: zoy0
@@ -23,13 +24,23 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    /**
+     * 登录
+     * @param loginDto
+     * @return
+     */
     @PostMapping("/login")
-    public ResponseVO<LoginRespVo> login(@RequestBody LoginDto loginDto){
+    public ResponseVO<LoginRespVo> login(@RequestBody @Valid LoginDto loginDto){
         return ResponseVO.success(userService.doLogin(loginDto));
     }
 
+    /**
+     * 注册
+     * @param registerDto
+     * @return
+     */
     @PostMapping("/register")
-    public ResponseVO<LoginRespVo> register(@RequestBody RegisterDto registerDto){
+    public ResponseVO<LoginRespVo> register(@RequestBody @Valid RegisterDto registerDto){
         userService.doRegister(registerDto);
         return ResponseVO.success();
     }

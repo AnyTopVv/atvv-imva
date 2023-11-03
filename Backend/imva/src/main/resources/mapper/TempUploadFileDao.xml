@@ -4,29 +4,53 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lazysun.imva.dao.TempUploadFileDao">
 
+    <resultMap id="TempUploadFile" type="com.lazysun.imva.moudel.po.TempUploadFile">
+        <result column="id" property="id"/>
+        <result column="upload_id" property="uploadId"/>
+        <result column="md5" property="md5"/>
+        <result column="user_id" property="userId"/>
+        <result column="file_name" property="fileName"/>
+        <result column="file_extension" property="fileExtension"/>
+        <result column="enable" property="enable"/>
+    </resultMap>
+
     <select id="findUploadIdByMD5" resultType="java.lang.String">
-        SELECT upload_id FROM temp_upload_file WHERE user_id = #{userId} AND md5 = #{md5} AND enable = 0
+        SELECT upload_id
+        FROM temp_upload_file
+        WHERE user_id = #{userId}
+          AND md5 = #{md5}
+          AND enable = 0
     </select>
 
 
     <insert id="insertOverlay">
         INSERT INTO temp_upload_file (upload_id, md5, user_id, file_name, enable)
         VALUES (#{uploadId}, #{md5}, #{userId}, #{fileName}, 0)
-        ON DUPLICATE KEY UPDATE upload_id = #{uploadId} , file_name = #{fileName}
+        ON DUPLICATE KEY UPDATE upload_id = #{uploadId},
+                                file_name = #{fileName},
+                                enable    = 0
     </insert>
 
 
     <select id="getFileNameByUploadId" resultType="java.lang.String">
-        SELECT file_name FROM temp_upload_file WHERE upload_id = #{uploadId} AND enable = 0
+        SELECT file_name
+        FROM temp_upload_file
+        WHERE upload_id = #{uploadId}
+          AND enable = 0
     </select>
 
 
     <update id="deleteByUploadId">
-        UPDATE temp_upload_file SET enable = id WHERE upload_id = #{uploadId}
+        UPDATE temp_upload_file
+        SET enable = id
+        WHERE upload_id = #{uploadId}
     </update>
 
 
-    <select id="getFileNameByMD5" resultType="java.lang.String">
-        SELECT file_name FROM temp_upload_file WHERE user_id = #{userId} AND md5 = #{md5}
+    <select id="getFileInfoByMD5" resultMap="TempUploadFile">
+        SELECT id, upload_id, file_name, file_extension
+        FROM temp_upload_file
+        WHERE user_id = #{userId}
+          AND md5 = #{md5}
     </select>
 </mapper>

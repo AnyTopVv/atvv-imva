@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * @author: zoy0
@@ -28,7 +29,7 @@ public class FileController {
      * @return
      */
     @PostMapping("/uploadChunk")
-    public ResponseVO upLoadFileChunk(FileChunksDto fileChunksDto) {
+    public ResponseVO upLoadFileChunk(@Valid FileChunksDto fileChunksDto) {
         fileService.uploadFileChunk(fileChunksDto);
         return ResponseVO.success();
     }
@@ -40,7 +41,7 @@ public class FileController {
      * @return
      */
     @GetMapping("/getUploadId")
-    public ResponseVO getUploadId(String md5, String fileExtension) {
+    public ResponseVO getUploadId( String md5,  String fileExtension) {
         return ResponseVO.success(fileService.findUploadDetailByMD5(md5, fileExtension));
     }
 }

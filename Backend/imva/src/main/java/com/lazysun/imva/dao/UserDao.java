@@ -11,7 +11,17 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserDao {
 
+    /**
+     * 通过用户名获取用户信息
+     * @param username 用户名
+     * @return user
+     */
     User findByUserName(@Param("username") String username);
 
+    /**
+     * 插入用户
+     * @param user 用户名
+     * @return
+     */
     boolean insert(User user);
 }
