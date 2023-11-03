@@ -25,6 +25,4 @@ public class QiNiuConfig{
     private String bucket;
 
     private String cdnUrl;
-
-    private String regionUploadUrl;
 }
