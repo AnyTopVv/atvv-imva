@@ -61,7 +61,7 @@ const VideoList: React.FC<any> = (props: { category: string }) => {
 
   return (
     <>
-      <div ref={containerRef} style={{ height: '100%', overflow: 'auto' }}>
+      <div ref={containerRef} style={{ height: '100%', overflow: 'auto', padding: '10px' }}>
         <Masonry
           items={data}
           config={{

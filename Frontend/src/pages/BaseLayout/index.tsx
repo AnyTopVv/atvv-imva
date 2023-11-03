@@ -1,4 +1,4 @@
-import { Button, Input, Layout, Menu, Image } from 'antd';
+import { Button, Input, Layout, Menu, Image, Avatar, Popover } from 'antd';
 import SiderRouters from '@/routes/SiderRoutes';
 import { meunItems } from '@/routes/routesConfig';
 import { useRef, type FC, type ReactElement } from 'react';
@@ -8,13 +8,22 @@ import { useNavigate } from 'react-router-dom';
 import LoginModal from '@/components/LoginModal';
 import { useAppSelector } from '@/redux/hooks';
 import { selectIsLogin } from '@/redux/features/isLogin/isLoginSlice';
+import { selectUserAvatar, selectUsername } from '@/redux/features/user/userSlice';
 
 const { Header, Sider, Content } = Layout;
 
 const BaseLayout: FC = (): ReactElement => {
   const isLogin = useAppSelector(selectIsLogin);
+  const username = useAppSelector(selectUsername);
+  const avatar = useAppSelector(selectUserAvatar);
   const navigate = useNavigate();
   const LoginModalRef: any = useRef();
+
+  const exitLogin = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+    window.location.reload();
+  }
 
   return (
     <>
@@ -47,21 +56,47 @@ const BaseLayout: FC = (): ReactElement => {
             <Input.Search></Input.Search>
             {
               isLogin ?
-                <Button type="text" onClick={() => { navigate('/upload') }}>
-                  <PlusSquareOutlined />
+                <Button type="text" icon={<PlusSquareOutlined />} onClick={() => { navigate('/upload') }}>
                   投稿
                 </Button> :
                 null
             }
-            <Button
-              type='primary'
-              icon={<UserOutlined />}
-              onClick={() => {
-                LoginModalRef.current.open();
-              }}
+            {username ? avatar ? <Popover
+              placement="bottom"
+              title={<>
+                <div>{username}</div>
+              </>}
+              content={<>
+                <Button onClick={exitLogin}>退出登录</Button>
+              </>}
             >
-              登录
-            </Button>
+              <div style={{ cursor: "pointer" }} >
+                <Avatar src={avatar} />
+              </div>
+            </Popover> :
+              <Popover
+                placement="bottom"
+                title={<>
+                  <div>{username}</div>
+                </>}
+                content={<>
+                  <Button onClick={exitLogin}>退出登录</Button>
+                </>}
+              >
+                <div style={{ cursor: "pointer" }} >
+                  <Avatar>{username}</Avatar>
+                </div>
+              </Popover> :
+              <Button
+                type='primary'
+                icon={<UserOutlined />}
+                onClick={() => {
+                  LoginModalRef.current.open();
+                }}
+              >
+                登录
+              </Button>
+            }
           </Header>
           <Content
             style={{

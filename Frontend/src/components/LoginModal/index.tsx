@@ -6,6 +6,7 @@ import { deepClone } from '@/utils/objectUtils/deepClone';
 import JSEncrypt from "jsencrypt";
 import { useAppDispatch } from '@/redux/hooks';
 import { setIsLogin } from '@/redux/features/isLogin/isLoginSlice';
+import { setUser } from '@/redux/features/user/userSlice';
 
 interface LoginModalProps {
   modalRef: any,
@@ -54,13 +55,21 @@ const LoginModal = (props: LoginModalProps): ReactElement => {
     userLogin(formData).then((res: any) => {
       if (res.data.code === 0) {
         message.success("登录成功！");
-        const { token } = res.data.data;
+        const { username, avatar, token } = res.data.data;
         localStorage.setItem('access_token', token);
-        dispatch(setIsLogin(true))
+        localStorage.setItem('user', JSON.stringify({
+          username: username,
+          avatar: avatar,
+        }))
+        dispatch(setIsLogin(true));
+        dispatch(setUser({
+          username: username,
+          avatar: avatar,
+        }));
         const timeout = setTimeout(() => {
           window.location.reload();
           clearTimeout(timeout);
-        }, 2000);
+        }, 1000);
       } else {
         message.error(res.data.msg || "登录失败！请稍后重试！");
       }
@@ -82,7 +91,6 @@ const LoginModal = (props: LoginModalProps): ReactElement => {
       }
     });
   }
-
 
   return (
     <Fragment>
