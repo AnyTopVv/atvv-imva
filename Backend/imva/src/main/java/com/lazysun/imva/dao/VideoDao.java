@@ -14,10 +14,25 @@ import java.util.List;
 @Mapper
 public interface VideoDao {
 
+    /**
+     * 通过id批量查询视频信息
+     * @param ids idLiat
+     * @return VideoDetailDto List
+     */
     List<VideoDetailDto> findByIds(@Param("ids") List<Long> ids);
 
 
+    /**
+     * 获取随机视频id
+     * @param count 获取个数
+     * @return id List
+     */
     List<Long> getRandomIds(@Param("count") int count);
 
+    /**
+     * 插入视频信息
+     * @param video
+     * @return
+     */
     boolean insert(Video video);
 }

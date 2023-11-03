@@ -10,7 +10,16 @@ import java.util.List;
  * @date: 2023/10/30 13:49
  */
 public interface VideoService {
+
+    /**
+     * 获取推荐视频
+     * @return
+     */
     List<RecommendVideoVO> getRecommendVideo();
 
+    /**
+     * 上传视频
+     * @param upLoadVideoDto
+     */
     void uploadVideo(UpLoadVideoDto upLoadVideoDto);
 }

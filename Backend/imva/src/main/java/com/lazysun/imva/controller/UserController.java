@@ -23,11 +23,21 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    /**
+     * 登录
+     * @param loginDto
+     * @return
+     */
     @PostMapping("/login")
     public ResponseVO<LoginRespVo> login(@RequestBody LoginDto loginDto){
         return ResponseVO.success(userService.doLogin(loginDto));
     }
 
+    /**
+     * 注册
+     * @param registerDto
+     * @return
+     */
     @PostMapping("/register")
     public ResponseVO<LoginRespVo> register(@RequestBody RegisterDto registerDto){
         userService.doRegister(registerDto);

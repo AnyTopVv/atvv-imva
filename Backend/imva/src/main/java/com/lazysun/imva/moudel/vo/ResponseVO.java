@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * http请求回复
  * @author: zoy0
  * @date: 2023/10/28 23:25
  */
@@ -13,10 +14,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseVO<T> {
+    /**
+     * 响应码
+     */
     private Integer code;
 
+    /**
+     * 响应消息
+     */
     private String msg;
 
+    /**
+     * 响应数据
+     */
     private T data;
 
     public ResponseVO(Integer code, String msg) {

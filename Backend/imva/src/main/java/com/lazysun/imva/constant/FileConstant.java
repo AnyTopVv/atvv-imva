@@ -25,11 +25,22 @@ public class FileConstant {
      */
     public static final String FILE_PREVIEW_PATH = "videos/previews";
 
+    /**
+     * 视频缩略图前缀
+     */
     public static final String PREVIEW_FILE_PREFIX = "preview-";
 
+    /**
+     * 视频缩略图后缀
+     */
     public static final String PREVIEW_FILE_SUFFIX = ".jpg";
 
+    /**
+     * 缩略图文件名
+     * @param fileName 文件名
+     * @return preview-filename.jpg
+     */
     public static String getFilePreviewPath(String fileName){
-        return PREVIEW_FILE_PREFIX + fileName.replace(".mp4",PREVIEW_FILE_SUFFIX);
+        return PREVIEW_FILE_PREFIX + fileName + PREVIEW_FILE_SUFFIX;
     }
 }

@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * 七牛云相关工具类
  * @author: zoy0
  * @date: 2023/10/28 22:28
  */
@@ -41,6 +42,13 @@ public class QiNiuUtil {
         }
     }
 
+    /**
+     * 获取上传id
+     * @param path 文件路径
+     * @param fileName 文件名
+     * @return
+     * @throws QiniuException
+     */
     public static String getUploadId(String path, String fileName) throws QiniuException {
         ApiUploadV2InitUpload.Request initUploadRequest = new ApiUploadV2InitUpload.Request(ProviderConstant.qiNiuConfig.getRegionUploadUrl(), QiNiuParameter.getUploadToken())
                 .setKey(path + "/" + fileName);
