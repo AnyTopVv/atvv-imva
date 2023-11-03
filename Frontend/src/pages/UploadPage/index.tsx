@@ -1,36 +1,63 @@
-import { InboxOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Input, Select, Upload } from 'antd';
-import type { FC, ReactElement } from 'react';
+import { Button, Card, Form, Input, Select, message } from 'antd';
+import { useState, type FC, type ReactElement, useRef } from 'react';
+import UploadFile from './UploadFile';
+import { deepClone } from '@/utils/objectUtils/deepClone';
+import { getFileMd5, videoUpload } from './service';
+import { categoryOptions } from '@/utils/constant';
 
 const { TextArea } = Input;
 
-const onFinish = (values: any) => {
-  console.log('Success:', values);
-};
+// const normFile = (e: any) => {
+//   console.log('Upload event:', e);
+//   if (Array.isArray(e)) {
+//     return e;
+//   }
+//   return e?.fileList;
+// };
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo);
-};
+const UploadPage1: FC = (): ReactElement => {
+  const [fileList, setFileList] = useState([]);
+  const uploadFileRef = useRef<any>(null);
+  const [formIns] = Form.useForm();
 
-const normFile = (e: any) => {
-  console.log('Upload event:', e);
-  if (Array.isArray(e)) {
-    return e;
+  const onFinish = async (values: any) => {
+    console.log(values);
+    const formData = deepClone({
+      videoName: values.videoName,
+      md5: values.md5,
+      categoryId: values.categoryId,
+    });
+    videoUpload(formData).then((res: any) => {
+      if (res.data.code === 0) {
+        message.success("视频发布成功！")
+        uploadFileRef.current.finishClear();
+      } else {
+        message.error(res.data.msg || "视频发布失败！请稍后重试！");
+      }
+    })
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+  };
+
+  // 获取 UploadFile 中的 fileList
+  const getFileList = (fileListProps: any) => {
+    setFileList(fileListProps)
   }
-  return e?.fileList;
-};
 
-const UploadPage: FC = (): ReactElement => {
+  const getUploadFile = (ref: any) => {
+    uploadFileRef.current = ref;
+  }
 
   return (
     <>
       <Card style={{ width: '100%', height: '100%', minWidth: 600 }}>
-
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className='upload-page' style={{ display: 'flex', justifyContent: 'center' }}>
           <Form
             name="upload"
             layout={'vertical'}
-            // form={form}
+            form={formIns}
             style={{ maxWidth: 800, minWidth: 600, width: '100%', padding: '20px' }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
@@ -40,39 +67,35 @@ const UploadPage: FC = (): ReactElement => {
             <h2 style={{ marginBottom: '20px' }}>发布视频</h2>
             <Form.Item
               label="视频标题"
-              name="title"
+              name="videoName"
               rules={[{ required: true, message: '请输入视频标题' }]}
             >
               <TextArea rows={4} />
             </Form.Item>
             <Form.Item
               label="视频"
+              name="md5"
+              rules={[{ required: true, message: '请上传视频' }]}
             >
-              <Form.Item
-                name="video"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-              >
-                <Upload.Dragger name="files" action="/upload.do">
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-text">点击上传 或直接将视频文件拖入此区域</p>
-                  <p className="ant-upload-hint">支持常用格式，推荐使用mp4、webm</p>
-                </Upload.Dragger>
-              </Form.Item>
+              <div style={{ overflow: 'hidden', position: 'relative', }} >
+                <UploadFile
+                  getFileList={getFileList}
+                  fileList={fileList}
+                  // setImage={setImage}
+                  getUploadFile={getUploadFile}
+                  getFileMd5={getFileMd5}
+                  formIns={formIns}
+                />
+              </div>
             </Form.Item>
             <Form.Item
-              name="category"
+              name="categoryId"
               label="视频分类"
               rules={[{ required: true, message: '请选择视频分类' }]}
             >
-              <Select>
-                <Select.Option value="demo">Demo</Select.Option>
+              <Select options={categoryOptions} style={{ width: 120 }}>
               </Select>
             </Form.Item>
-
-
             <Form.Item>
               <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
                 发布
@@ -85,4 +108,4 @@ const UploadPage: FC = (): ReactElement => {
   );
 };
 
-export default UploadPage;
+export default UploadPage1;

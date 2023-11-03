@@ -5,6 +5,8 @@ import throttle from '@/utils/commonUtils/throttle'
 import styles from './index.module.css';
 import PubPlayer from '@/components/PubPlayer'
 import Mp4Plugin from "xgplayer-mp4"
+import useLatest from '@/hooks/useLatest';
+import customFullscreen from '@/utils/xgPlayerPlugins/customFullscreen';
 
 const Recommend: React.FC = () => {
   const carouselRef: any = useRef();
@@ -12,8 +14,10 @@ const Recommend: React.FC = () => {
   const [videoQueue, setVideoQueue] = useState<any[]>([]);
   const [isBegin, setIsBegin] = useState<boolean>(true);
   const [isEnd, _setIsEnd] = useState<boolean>(false);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const currentIndex: any = useRef();
   const playerRefList: any = useRef([]);
+  const latestIsFullscreenRef = useLatest(isFullscreen);
 
   // videoQueue.current = useMemo(
   //   () => videoQueue.current.concat(latestMessage),
@@ -55,10 +59,20 @@ const Recommend: React.FC = () => {
     playerRefList.current.push(ins);
   }
 
+  const handleFullscreenChange = () => {
+    setIsFullscreen(document.fullscreenElement !== null);
+  };
+
   useEffect(() => {
     getRecommendPageVideo().then((res) => {
       appendVideos(res?.data.data);
     });
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+    }
   }, [])
 
   // 这样不知道为什么不会触发
@@ -68,7 +82,7 @@ const Recommend: React.FC = () => {
 
   return (
     <>
-      <div className={styles.videoPlayer} ref={fullScreenRef}>
+      <div id="video-player" className={styles.videoPlayer} ref={fullScreenRef}>
         <Slider // 不要用antd的走马灯，有bug
           dots={false}
           arrows={false}
@@ -91,17 +105,40 @@ const Recommend: React.FC = () => {
               width: '100%',
               lang: 'zh',
               marginControls: true,
+              fullscreen: false,
               cssFullscreen: false,
-              plugins: [Mp4Plugin],
+              loop: true, // 循环播放
+              plugins: [Mp4Plugin, customFullscreen],
               mp4plugin: {
                 maxBufferLength: 10,
                 minBufferLength: 5,
               },
+              start: {
+                disableAnimate: true,
+              },
+              dynamicBg: {
+                disable: false,
+              },
+              customFullscreen: {
+                target: fullScreenRef.current,
+                isFullscreen: latestIsFullscreenRef,
+                setIsFullscreen: setIsFullscreen,
+              },
+              commonStyle: {
+                // 进度条底色
+                progressColor: '776ce9',
+                // 播放完成部分进度条底色
+                playedColor: '#776ce9',
+                // 缓存部分进度条底色
+                cachedColor: '',
+                // 进度条滑块样式
+                sliderBtnStyle: {},
+                // 音量颜色
+                volumeColor: '#776ce9',
+              },
               // preloadTime: 10,  // 预加载固定10s的内容
             };
-            return <div key={index}>
-              <PubPlayer getRef={getRef} playerConfig={playerConfig} videoData={videoData} index={index} />
-            </div>
+            return <PubPlayer key={index} getRef={getRef} playerConfig={playerConfig} videoData={videoData} index={index} isFullscreen={isFullscreen} />
           })}
         </Slider>
         <ul className={styles.videoSwitcher}>
