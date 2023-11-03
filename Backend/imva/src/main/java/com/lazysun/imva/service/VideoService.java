@@ -1,5 +1,6 @@
 package com.lazysun.imva.service;
 
+import com.lazysun.imva.moudel.dto.UpLoadVideoDto;
 import com.lazysun.imva.moudel.vo.RecommendVideoVO;
 
 import java.util.List;
@@ -10,4 +11,6 @@ import java.util.List;
  */
 public interface VideoService {
     List<RecommendVideoVO> getRecommendVideo();
+
+    void uploadVideo(UpLoadVideoDto upLoadVideoDto);
 }

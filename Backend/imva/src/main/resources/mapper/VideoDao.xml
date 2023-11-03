@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazysun.imva.dao.VideoDao">
+
+    <resultMap id="Video" type="com.lazysun.imva.moudel.po.Video" >
+        <result column="id" property="id" />
+        <result column="video_name" property="videoName" />
+        <result column="file_path" property="filePath" />
+        <result column="preview_path" property="previewPath" />
+        <result column="category_id" property="categoryId" />
+        <result column="author_id" property="authorId" />
+        <result column="like" property="like" />
+        <result column="star" property="star" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        v.id,
+        v.video_name,
+        v.file_path,
+        v.preview_path,
+        v.category_id,
+        v.author_id,
+        v.like,
+        v.star
+    </sql>
+
+    <select id="findByIds" resultType="com.lazysun.imva.moudel.dto.VideoDetailDto">
+        SELECT <include refid="Base_Column_List"/>, u.username as author , u.avatar as authorAvatar, c.category_name as category FROM video v
+        LEFT JOIN `user` u ON v.author_id = u.id
+        LEFT JOIN category c ON v.category_id = c.id
+        WHERE v.id IN
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getRandomIds" resultType="java.lang.Long">
+        SELECT
+            id
+        FROM
+            video
+        WHERE
+            id >= ( SELECT floor( RAND() * ( SELECT MAX( id ) FROM video ) ) )
+        ORDER BY
+            id
+        LIMIT #{count};
+    </select>
+
+
+    <insert id="insert">
+        INSERT INTO video (video_name, file_path, preview_path, author_id, category_id, `like`, star)
+        VALUES (#{videoName}, #{filePath}, #{previewPath}, #{authorId}, #{categoryId}, #{like}, #{star});
+    </insert>
+</mapper>
