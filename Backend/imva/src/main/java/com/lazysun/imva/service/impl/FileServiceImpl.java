@@ -2,6 +2,8 @@ package com.lazysun.imva.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.lazysun.imva.constant.ErrorCode;
+import com.lazysun.imva.constant.FileConstant;
+import com.lazysun.imva.constant.RedisConstant;
 import com.lazysun.imva.dao.TempUploadFileDao;
 import com.lazysun.imva.exception.ImvaServiceException;
 import com.lazysun.imva.moudel.dto.FileChunksDto;
@@ -10,6 +12,7 @@ import com.lazysun.imva.moudel.po.TempUploadFile;
 import com.lazysun.imva.moudel.vo.UploadDetailVO;
 import com.lazysun.imva.service.FileService;
 import com.lazysun.imva.utils.QiNiuUtil;
+import com.lazysun.imva.utils.RedisUtil;
 import com.qiniu.common.QiniuException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -27,9 +30,6 @@ import java.util.stream.Collectors;
 public class FileServiceImpl implements FileService {
 
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
-
-    @Resource
     private TempUploadFileDao tempUploadFileDao;
 
     @Override
@@ -39,34 +39,29 @@ public class FileServiceImpl implements FileService {
         if (Objects.isNull(uploadId)) {
             String fileName = UUID.randomUUID() + "." + fileExtension;
             try {
-                uploadId = QiNiuUtil.getUploadId("video/video", fileName);
+                uploadId = QiNiuUtil.getUploadId(FileConstant.TEMP_FILE_VIDEO_PATH, fileName);
             } catch (QiniuException e) {
                 e.printStackTrace();
                 throw new ImvaServiceException(ErrorCode.GET_UPLOAD_ID_ERROR);
             }
             tempUploadFileDao.insert(new TempUploadFile(uploadId,md5,userId,fileName));
         }
-        Set<Integer> chunks = new HashSet<>();
-        Set<Object> members = redisTemplate.opsForSet().members("filechunks:" + uploadId);
-        if (Objects.nonNull(members)) {
-            chunks.addAll(members.stream().map(o -> (Integer) o).collect(Collectors.toList()));
-        }
-        return new UploadDetailVO(uploadId, chunks);
+        Set<Object> partInfosSet = RedisUtil.sGet(RedisConstant.getPartInfosSetKey(uploadId));
+        return new UploadDetailVO(uploadId, partInfosSet.stream().map(o -> ((PartInfo)o).getPartNumber()).collect(Collectors.toSet()));
     }
 
     @Override
     public void uploadFileChunk(FileChunksDto fileChunksDto) {
         String filename = tempUploadFileDao.getFileNameByUploadId(fileChunksDto.getUploadId());
         try {
-            PartInfo partInfo = QiNiuUtil.uploadMultiPartFile(fileChunksDto.getUploadId(), fileChunksDto.getFile(), "video/video", filename, fileChunksDto.getIndex());
-            redisTemplate.opsForSet().add("filechunks:" + fileChunksDto.getUploadId(), fileChunksDto.getIndex());
-            redisTemplate.opsForSet().add("partInfosSet:" + fileChunksDto.getUploadId(), partInfo);
+            PartInfo partInfo = QiNiuUtil.uploadMultiPartFile(fileChunksDto.getUploadId(), fileChunksDto.getFile(), FileConstant.TEMP_FILE_VIDEO_PATH, filename, fileChunksDto.getIndex());
+            RedisUtil.sSet(RedisConstant.getPartInfosSetKey(fileChunksDto.getUploadId()),RedisConstant.COMMON_EXPIRE_TIME,partInfo);
         } catch (IOException e) {
             throw new ImvaServiceException(ErrorCode.FILE_ERROR_UPLOAD);
         }
-        Set<Object> partInfosSet = redisTemplate.opsForSet().members("partInfosSet:" + fileChunksDto.getUploadId());
-        if (partInfosSet.size() == fileChunksDto.getTotalChunk()) {
+        if (RedisUtil.sGetSetSize(RedisConstant.getPartInfosSetKey(fileChunksDto.getUploadId())) == fileChunksDto.getTotalChunk()) {
             try {
+                Set<Object> partInfosSet = RedisUtil.sGet(RedisConstant.getPartInfosSetKey(fileChunksDto.getUploadId()));
                 QiNiuUtil.assembleUploadFile(fileChunksDto.getUploadId(), partInfosSet.stream().map(o -> (PartInfo) o).sorted(Comparator.comparingInt(PartInfo::getPartNumber)).collect(Collectors.toList()), "video/video", filename);
                 tempUploadFileDao.deleteByUploadId(fileChunksDto.getUploadId());
             } catch (IOException e) {
