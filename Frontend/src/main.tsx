@@ -11,7 +11,7 @@ import '@/css/index.less'
 // 定制主题
 const theme: ThemeConfig = {
   token: {
-    colorPrimary: '#1677ff',
+    colorPrimary: '#776ce9',
   },
 }
 

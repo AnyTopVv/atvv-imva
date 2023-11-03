@@ -5,8 +5,12 @@ import PageNotFound from '@/pages/PageNotFound';
 import useLazyRoutes from '@/hooks/useLazyRoutes';
 import { routesConfig } from './routesConfig';
 import type { FC, ReactElement } from 'react';
+import UploadPage from '@/pages/UploadPage';
+import { useAppSelector } from '@/redux/hooks';
+import { selectIsLogin } from '@/redux/features/isLogin/isLoginSlice';
 
 const SiderRouters: FC = (): ReactElement => {
+  const isLogin = useAppSelector(selectIsLogin);
   const lazyRoutes = useLazyRoutes(routesConfig);
 
   return (
@@ -19,6 +23,12 @@ const SiderRouters: FC = (): ReactElement => {
           path="/"
           element={
             <Navigate to='/recommend' />
+          }
+        />
+        <Route
+          path="/upload"
+          element={
+            isLogin ? <UploadPage /> : <PageNotFound msg="请登录后访问该页面" />
           }
         />
         <Route path="*" element={<PageNotFound />} />

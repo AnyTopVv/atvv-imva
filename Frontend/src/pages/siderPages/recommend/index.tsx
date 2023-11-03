@@ -82,7 +82,6 @@ const Recommend: React.FC = () => {
           className={styles.slider}
         >
           {videoQueue.map((videoData: { [propName: string]: string }, index) => {
-            // const PlayerRef = useRef();
             const playerConfig = {
               url: videoData.videoSrc,
               poster: videoData.videoPreview,

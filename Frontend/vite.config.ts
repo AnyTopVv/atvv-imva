@@ -15,12 +15,13 @@ export default defineConfig({
     open: true,
     host: true,
     proxy: {
-      '/video': {
-        target: 'http://10.21.22.100:9071',
+      '/api': {
+        target: 'http://10.21.22.100:81',
         changeOrigin: true,
       },
     },
   },
+  base: './',
   css: {
     modules: {
       localsConvention: 'camelCaseOnly',  // 配置css module驼峰式转换

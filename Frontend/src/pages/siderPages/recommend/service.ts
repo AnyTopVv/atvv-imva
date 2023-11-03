@@ -3,7 +3,7 @@ import axios from 'axios'
 export const getRecommendPageVideo = () => {
   return axios({
     method: 'get',
-    url: '/video/getRecommendPageVideo',
+    url: '/api/video/getRecommendPageVideo',
   }).then(res => {
     if (res && res.status === 200) {
       return res;

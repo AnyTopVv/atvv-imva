@@ -23,6 +23,9 @@ dependencies:
   axios:
     specifier: ^1.5.0
     version: 1.6.0
+  jsencrypt:
+    specifier: ^3.3.2
+    version: 3.3.2
   less:
     specifier: ^4.2.0
     version: 4.2.0
@@ -32,6 +35,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
+  react-plock:
+    specifier: ^3.0.2
+    version: 3.0.2(react@18.2.0)
   react-redux:
     specifier: ^8.1.2
     version: 8.1.3(@types/react-dom@18.2.14)(@types/react@18.2.33)(react-dom@18.2.0)(react@18.2.0)(redux@4.2.1)
@@ -1631,6 +1637,10 @@ packages:
       argparse: 2.0.1
     dev: true
 
+  /jsencrypt@3.3.2:
+    resolution: {integrity: sha512-arQR1R1ESGdAxY7ZheWr12wCaF2yF47v5qpB76TtV64H1pyGudk9Hvw8Y9tb/FiTIaaTRUyaSnm5T/Y53Ghm/A==}
+    dev: false
+
   /json-buffer@3.0.1:
     resolution: {integrity: sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==}
     dev: true
@@ -2432,6 +2442,14 @@ packages:
 
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+    dev: false
+
+  /react-plock@3.0.2(react@18.2.0):
+    resolution: {integrity: sha512-0QfiLna1KfzrB9zN/a5mEKHqSc6twhOndYp2D9tdYv5gpwLBwu563p47mUarBRJv4KVnzCdJz8mW2Lllma0qIA==}
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-redux@8.1.3(@types/react-dom@18.2.14)(@types/react@18.2.33)(react-dom@18.2.0)(react@18.2.0)(redux@4.2.1):
