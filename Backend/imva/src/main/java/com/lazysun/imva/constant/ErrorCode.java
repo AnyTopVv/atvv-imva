@@ -10,6 +10,7 @@ public enum ErrorCode {
     // 系统模块
     SUCCESS(0, "操作成功"),
     ERROR(1, "操作失败"),
+    BAD_REQUEST(400,"错误的请求"),
     SERVER_ERROR(500, "服务器异常"),
 
     // 用户模块

@@ -7,6 +7,7 @@ import com.lazysun.imva.service.VideoService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public class VideoController {
      * @return
      */
     @PostMapping("/upload")
-    public ResponseVO uploadVideo(@RequestBody UpLoadVideoDto upLoadVideoDto){
+    public ResponseVO uploadVideo(@RequestBody @Valid UpLoadVideoDto upLoadVideoDto){
         videoService.uploadVideo(upLoadVideoDto);
         return  ResponseVO.success();
     }
