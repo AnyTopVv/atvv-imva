@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class FileChunksDto {
 
-    private String index;
+    private Integer index;
 
     private String uploadId;
 

@@ -17,7 +17,7 @@ public interface VideoDao {
     List<VideoDetailDto> findByIds(@Param("ids") List<Long> ids);
 
 
-    List<Long> getRamdomIds(@Param("count") int count);
+    List<Long> getRandomIds(@Param("count") int count);
 
     boolean insert(Video video);
 }

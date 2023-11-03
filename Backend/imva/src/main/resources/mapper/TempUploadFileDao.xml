@@ -10,8 +10,16 @@
 
 
     <insert id="insert">
-        INSERT INTO temp_upload_file (upload_id, md5, user_id, enable) VALUES (#{uploadId}, #{md5}, #{userId}, 0);
+        INSERT INTO temp_upload_file (upload_id, md5, user_id, file_name, enable) VALUES (#{uploadId}, #{md5}, #{userId}, #{fileName}, 0);
     </insert>
 
 
+    <select id="getFileNameByUploadId" resultType="java.lang.String">
+        SELECT file_name FROM temp_upload_file WHERE upload_id = #{uploadId} AND enable = 0
+    </select>
+
+
+    <delete id="deleteByUploadId">
+        UPDATE temp_upload_file SET enable = id WHERE upload_id = #{uploadId}
+    </delete>
 </mapper>

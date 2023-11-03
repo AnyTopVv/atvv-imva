@@ -7,6 +7,7 @@ import com.qiniu.common.QiniuException;
 import com.qiniu.http.Client;
 import com.qiniu.storage.*;
 import com.qiniu.util.Auth;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -56,12 +57,12 @@ public class QiNiuUtil {
      * @param partNumber   第几块切片
      * @return 是否上传成功
      */
-    public static PartInfo uploadMultiPartFile(String uploadId, RandomAccessFile file, String path, String saveFileName, int partNumber) throws IOException {
+    public static PartInfo uploadMultiPartFile(String uploadId, MultipartFile file, String path, String saveFileName, int partNumber) throws IOException {
         String urlPrefix = ProviderConstant.qiNiuConfig.getRegionUploadUrl();
         String token = QiNiuParameter.getUploadToken();
 
         // 上传文件数据
-        byte[] partData = getFilByte(file);
+        byte[] partData = file.getBytes();
         PartInfo partInfo = new PartInfo();
         ApiUploadV2UploadPart.Request uploadPartRequest = new ApiUploadV2UploadPart.Request(urlPrefix, token, uploadId, partNumber)
                 .setKey(path + "/" + saveFileName)
@@ -168,7 +169,7 @@ public class QiNiuUtil {
 
         public static ApiUploadV2InitUpload getApiUploadV2InitUpload() {
             if (Objects.isNull(apiUploadV2InitUpload)) {
-                Configuration configuration = new Configuration(Region.xinjiapo());
+                Configuration configuration = new Configuration();
                 Client client = new Client(configuration);
                 apiUploadV2InitUpload = new ApiUploadV2InitUpload(client);
             }
@@ -177,7 +178,7 @@ public class QiNiuUtil {
 
         public static ApiUploadV2UploadPart getApiUploadV2UploadPart() {
             if (Objects.isNull(apiUploadV2UploadPart)) {
-                Configuration configuration = new Configuration(Region.xinjiapo());
+                Configuration configuration = new Configuration();
                 Client client = new Client(configuration);
                 apiUploadV2UploadPart = new ApiUploadV2UploadPart(client);
             }
@@ -186,7 +187,7 @@ public class QiNiuUtil {
 
         public static ApiUploadV2CompleteUpload getApiUploadV2CompleteUpload() {
             if (Objects.isNull(apiUploadV2CompleteUpload)) {
-                Configuration configuration = new Configuration(Region.xinjiapo());
+                Configuration configuration = new Configuration();
                 Client client = new Client(configuration);
                 apiUploadV2CompleteUpload = new ApiUploadV2CompleteUpload(client);
             }

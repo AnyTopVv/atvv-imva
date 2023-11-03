@@ -36,7 +36,7 @@
         </foreach>
     </select>
 
-    <select id="getRamdomIds" resultType="java.lang.Long">
+    <select id="getRandomIds" resultType="java.lang.Long">
         SELECT
             id
         FROM

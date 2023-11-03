@@ -17,6 +17,10 @@ public enum ErrorCode {
     ERROR_PASSWORD(10002,"用户密码错误"),
     DUPLICATE_USERNAME(10011,"用户名重复"),
 
+    //文件模块
+    FILE_ERROR_UPLOAD(20001,"文件上传失败"),
+    FILE_ERROR_ASSEMBLE(20002,"文件切片合并失败"),
+    GET_UPLOAD_ID_ERROR(20003,"获取文件上传id失败")
     ;
     private final Integer code;
 

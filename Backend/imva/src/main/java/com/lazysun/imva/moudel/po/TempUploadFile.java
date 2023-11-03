@@ -19,4 +19,11 @@ public class TempUploadFile {
     private String fileName;
 
     private Long enable;
+
+    public TempUploadFile(String uploadId, String md5, Long userId, String fileName) {
+        this.uploadId = uploadId;
+        this.md5 = md5;
+        this.userId = userId;
+        this.fileName = fileName;
+    }
 }

@@ -1,23 +1,16 @@
 package com.lazysun.imva.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
-import com.lazysun.imva.constant.ErrorCode;
-import com.lazysun.imva.dao.TempUploadFileDao;
+
 import com.lazysun.imva.dao.VideoDao;
-import com.lazysun.imva.exception.ImvaServiceException;
 import com.lazysun.imva.moudel.dto.VideoDetailDto;
-import com.lazysun.imva.moudel.po.TempUploadFile;
 import com.lazysun.imva.moudel.vo.RecommendVideoVO;
 import com.lazysun.imva.service.VideoService;
 import com.lazysun.imva.utils.QiNiuUtil;
-import com.qiniu.common.QiniuException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
 /**
  * @author: zoy0
@@ -29,12 +22,10 @@ public class VideoServiceImpl implements VideoService {
     @Resource
     private VideoDao videoDao;
 
-    @Resource
-    private TempUploadFileDao tempUploadFileDao;
 
     @Override
     public List<RecommendVideoVO> getRecommendVideo() {
-        List<Long> videoIds = videoDao.getRamdomIds(5);
+        List<Long> videoIds = videoDao.getRandomIds(5);
         List<VideoDetailDto> videos = videoDao.findByIds(videoIds);
         List<RecommendVideoVO> list = new ArrayList<>();
         for (VideoDetailDto video : videos) {
@@ -48,19 +39,4 @@ public class VideoServiceImpl implements VideoService {
         return list;
     }
 
-    @Override
-    public String findUploadIdByMD5(String md5, String fileExtension) {
-        Long userId = (Long)StpUtil.getLoginId();
-        String uploadId = tempUploadFileDao.findUploadIdByMD5(md5, userId);
-        if (Objects.isNull(uploadId)){
-            String fileName = UUID.randomUUID() + "." + fileExtension;
-            try {
-                uploadId = QiNiuUtil.getUploadId("video/video/", fileName);
-            } catch (QiniuException e) {
-                throw new ImvaServiceException(ErrorCode.ERROR);
-            }
-            tempUploadFileDao.insert(new TempUploadFile());
-        }
-        return uploadId;
-    }
 }
