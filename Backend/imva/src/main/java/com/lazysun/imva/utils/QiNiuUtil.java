@@ -7,6 +7,7 @@ import com.qiniu.common.QiniuException;
 import com.qiniu.http.Client;
 import com.qiniu.storage.*;
 import com.qiniu.util.Auth;
+import com.qiniu.util.StringMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -173,7 +174,7 @@ public class QiNiuUtil {
          * @return uploadToken
          */
         public static String getUploadToken() {
-            if (Objects.isNull(uploadToken) || uploadTokenExpires > System.currentTimeMillis()) {
+            if (Objects.isNull(uploadToken) || uploadTokenExpires < System.currentTimeMillis()) {
                 refreshToken();
             }
             return uploadToken;
@@ -215,9 +216,9 @@ public class QiNiuUtil {
         }
 
         private static void refreshToken() {
-            //默认过期时间为360s
-            uploadToken = SingletonAuth.getInstance().uploadToken(ProviderConstant.qiNiuConfig.getBucket());
-            uploadTokenExpires = System.currentTimeMillis() + 300 * 1000;
+            //默认过期时间为7200s
+            uploadToken = SingletonAuth.getInstance().uploadToken(ProviderConstant.qiNiuConfig.getBucket(), null, 7200L,null, true);
+            uploadTokenExpires = System.currentTimeMillis() + 1000 * 7000 ;
         }
     }
 
