@@ -39,7 +39,7 @@ public class FileServiceImpl implements FileService {
         if (Objects.isNull(uploadId) || partInfosSet.isEmpty()) {
             String fileName = UUID.randomUUID().toString();
             try {
-                uploadId = QiNiuUtil.getUploadId(FileConstant.TEMP_FILE_VIDEO_PATH, fileName);
+                uploadId = QiNiuUtil.getUploadId(FileConstant.TEMP_FILE_VIDEO_PATH, fileName + "." + fileExtension);
             } catch (QiniuException e) {
                 e.printStackTrace();
                 throw new ImvaServiceException(ErrorCode.GET_UPLOAD_ID_ERROR);
