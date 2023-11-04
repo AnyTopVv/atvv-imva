@@ -43,13 +43,23 @@ public class JwtUtil {
         return  token;
     }
 
+    /**
+     * 验证jwt是否有效，有效则返回false
+     * @param jwt jwt
+     * @return
+     */
     public static boolean verifyJwt(String jwt){
         // 通过签名生成验证对象
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SIGN)).build();
         DecodedJWT verify = jwtVerifier.verify(jwt);
-        return verify.getExpiresAt().before(new Date());
+        return verify.getExpiresAt().after(new Date());
     }
 
+    /**
+     * 通过jwt获取userId
+     * @param jwt jwt
+     * @return userId
+     */
     public static Long getLoginUserId(String jwt){
         // 通过签名生成验证对象
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SIGN)).build();

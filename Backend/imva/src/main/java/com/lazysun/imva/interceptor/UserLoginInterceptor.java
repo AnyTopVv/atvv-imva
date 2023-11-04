@@ -25,13 +25,15 @@ public class UserLoginInterceptor implements HandlerInterceptor {
         if (Objects.isNull(jwt)){
             throw new ImvaServiceException(ErrorCode.NOT_LOGIN);
         }
-        if (JwtUtil.verifyJwt(jwt)){
-            Long userId;
-            try {
-                userId = JwtUtil.getLoginUserId(jwt);
-            } catch (Exception e) {
-                throw new ImvaServiceException(ErrorCode.JWT_ERROR);
-            }
+        boolean isEffective;
+        Long userId;
+        try {
+            isEffective = JwtUtil.verifyJwt(jwt);
+            userId = JwtUtil.getLoginUserId(jwt);
+        } catch (Exception e) {
+            throw new ImvaServiceException(ErrorCode.JWT_ERROR);
+        }
+        if (isEffective){
             UserContext.setUserId(userId);
         }else {
             throw new ImvaServiceException(ErrorCode.JWT_EXPIRE);
