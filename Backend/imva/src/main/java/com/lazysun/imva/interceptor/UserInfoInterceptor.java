@@ -13,29 +13,34 @@ import java.util.Objects;
 
 /**
  * @author: zoy0
- * @date: 2023/11/4 9:50
+ * @date: 2023/11/4 22:25
  */
-public class UserLoginInterceptor implements HandlerInterceptor {
+public class UserInfoInterceptor implements HandlerInterceptor {
+
     /***
      * 在请求处理之前进行调用
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String jwt = request.getHeader("authorization");
-        if (Objects.isNull(jwt)){
-            throw new ImvaServiceException(ErrorCode.NOT_LOGIN);
+        if (Objects.isNull(jwt)) {
+            return true;
         }
-        boolean isEffective;
+        Long userId;
         try {
-            isEffective = JwtUtil.verifyJwt(jwt);
+            userId = JwtUtil.getLoginUserId(jwt);
         } catch (Exception e) {
-            throw new ImvaServiceException(ErrorCode.JWT_ERROR);
+            return true;
         }
-        if (!isEffective){
-            throw new ImvaServiceException(ErrorCode.JWT_EXPIRE);
-        }
+        UserContext.setUserId(userId);
         return true;
     }
 
-
+    /***
+     * 请求处理之后进行调用
+     */
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        UserContext.remove();
+    }
 }

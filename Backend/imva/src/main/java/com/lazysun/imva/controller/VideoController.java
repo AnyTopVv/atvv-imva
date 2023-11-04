@@ -1,6 +1,7 @@
 package com.lazysun.imva.controller;
 
 import com.lazysun.imva.moudel.dto.UpLoadVideoDto;
+import com.lazysun.imva.moudel.dto.VideoDetailDto;
 import com.lazysun.imva.moudel.vo.RecommendVideoVO;
 import com.lazysun.imva.moudel.vo.ResponseVO;
 import com.lazysun.imva.service.VideoService;
@@ -26,9 +27,19 @@ public class VideoController {
      * @return
      */
     @GetMapping("/getRecommendPageVideo")
-    public ResponseVO<List<RecommendVideoVO>> getRecommendPageVideo() {
-        List<RecommendVideoVO> list = videoService.getRecommendVideo();
+    public ResponseVO<List<RecommendVideoVO>> getRecommendPageVideo(Long categoryId) {
+        List<RecommendVideoVO> list = videoService.getRecommendVideo(categoryId);
         return ResponseVO.success(list);
+    }
+
+    /**
+     * 获取视频详情页
+     * @return
+     */
+    @GetMapping("/detail")
+    public ResponseVO<RecommendVideoVO> getVideoDetail(@RequestParam Long videoId) {
+        RecommendVideoVO video = videoService.getVideoDetailById(videoId);
+        return ResponseVO.success(video);
     }
 
     /**
@@ -41,5 +52,7 @@ public class VideoController {
         videoService.uploadVideo(upLoadVideoDto);
         return  ResponseVO.success();
     }
+
+
 
 }

@@ -43,6 +43,9 @@
             video
         WHERE
             id >= ( SELECT floor( RAND() * ( SELECT MAX( id ) FROM video ) ) )
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
         ORDER BY
             id
         LIMIT #{count};

@@ -1,5 +1,6 @@
 package com.lazysun.imva.config;
 
+import com.lazysun.imva.interceptor.UserInfoInterceptor;
 import com.lazysun.imva.interceptor.UserLoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
@@ -20,7 +21,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registration.excludePathPatterns(    //添加不拦截路径
                 "/user/login",                 //登录
                 "/user/register",               //注册
-                "/video/getRecommendPageVideo"
+                "/video/getRecommendPageVideo",
+                "/video/detail",
+                "/category/getAll"
         );
+        registry.addInterceptor(new UserInfoInterceptor()).
+                addPathPatterns("/**");
     }
 }

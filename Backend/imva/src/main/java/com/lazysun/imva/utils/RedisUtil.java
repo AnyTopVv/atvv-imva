@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -205,5 +206,45 @@ public class RedisUtil {
     public static Map<Object, Object> hmget(String key) {
         return redisTemplate.opsForHash().entries(key);
     }
+
+
+    //======== List ==========//
+
+
+    /**
+     * 将list放入缓存
+     *
+     * @param key   键
+     * @param value 值
+     * @return
+     */
+    public static boolean lSet(String key, List<Object> value, long time) {
+        try {
+            redisTemplate.opsForList().rightPushAll(key, value);
+            expire(key, time);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 获取list缓存的内容
+     *
+     * @param key   键
+     * @param count 个数
+     * @return
+     */
+    public static List<Object> lGet(String key, int count) {
+        try {
+            return redisTemplate.opsForList().rightPop(key,count);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
 }

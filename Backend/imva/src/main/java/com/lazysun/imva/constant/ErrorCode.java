@@ -24,7 +24,10 @@ public enum ErrorCode {
     //文件模块
     FILE_ERROR_UPLOAD(20001,"文件上传失败"),
     FILE_ERROR_ASSEMBLE(20002,"文件切片合并失败"),
-    GET_UPLOAD_ID_ERROR(20003,"获取文件上传id失败")
+    GET_UPLOAD_ID_ERROR(20003,"获取文件上传id失败"),
+
+    //视频模块
+    VIDEO_NOT_FOUND(30001,"未找到相关视频"),
     ;
     private final Integer code;
 
