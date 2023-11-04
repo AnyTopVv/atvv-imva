@@ -21,7 +21,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 "/user/login",                 //登录
                 "/user/register",               //注册
                 "/video/getRecommendPageVideo",
-                "/video/detail"
+                "/video/detail",
+                "/category/getAll"
         );
     }
 }

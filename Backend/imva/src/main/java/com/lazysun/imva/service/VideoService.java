@@ -23,5 +23,10 @@ public interface VideoService {
      */
     void uploadVideo(UpLoadVideoDto upLoadVideoDto);
 
+    /**
+     * 获取视频详情信息
+     * @param videoId 视频id
+     * @return
+     */
     RecommendVideoVO getVideoDetailById(Long videoId);
 }
