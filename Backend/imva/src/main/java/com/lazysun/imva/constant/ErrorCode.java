@@ -17,6 +17,9 @@ public enum ErrorCode {
     NO_USER(10001,"用户不存在"),
     ERROR_PASSWORD(10002,"用户密码错误"),
     DUPLICATE_USERNAME(10011,"用户名重复"),
+    JWT_EXPIRE(10021,"用户登录凭证过期"),
+    NOT_LOGIN(10022,"用户未登录"),
+    JWT_ERROR(10031,"用户认证失败"),
 
     //文件模块
     FILE_ERROR_UPLOAD(20001,"文件上传失败"),

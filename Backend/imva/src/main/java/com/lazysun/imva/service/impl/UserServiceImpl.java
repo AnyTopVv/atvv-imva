@@ -1,7 +1,6 @@
 package com.lazysun.imva.service.impl;
 
-import cn.dev33.satoken.stp.SaTokenInfo;
-import cn.dev33.satoken.stp.StpUtil;
+import com.lazysun.imva.constant.CommonConstant;
 import com.lazysun.imva.constant.ErrorCode;
 import com.lazysun.imva.dao.UserDao;
 import com.lazysun.imva.exception.ImvaServiceException;
@@ -10,6 +9,8 @@ import com.lazysun.imva.moudel.dto.RegisterDto;
 import com.lazysun.imva.moudel.po.User;
 import com.lazysun.imva.moudel.vo.LoginRespVo;
 import com.lazysun.imva.service.UserService;
+import com.lazysun.imva.utils.JwtUtil;
+import com.lazysun.imva.utils.QiNiuUtil;
 import com.lazysun.imva.utils.SecureUtil;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,9 @@ public class UserServiceImpl implements UserService {
         } else if (!user.getPassword().equals(SecureUtil.md5Encrypt(SecureUtil.rsaDecrypt(loginDto.getPassword())))) {
             throw new ImvaServiceException(ErrorCode.ERROR_PASSWORD);
         }
-        StpUtil.login(user.getId());
-        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-        return new LoginRespVo(user.getUsername(), user.getAvatar(), tokenInfo.tokenValue);
+        String jwt = JwtUtil.createJwt(user);
+        String avatarUrl = QiNiuUtil.getDownloadUrl(user.getAvatar(), null);
+        return new LoginRespVo(user.getUsername(), avatarUrl, jwt);
     }
 
     @Override
@@ -47,6 +48,8 @@ public class UserServiceImpl implements UserService {
         user = new User();
         user.setUsername(registerDto.getUsername());
         user.setPassword(SecureUtil.md5Encrypt(SecureUtil.rsaDecrypt(registerDto.getPassword())));
+        user.setStatus(1);
+        user.setAvatar(CommonConstant.DEFAULT_AVATAR);
         userDao.insert(user);
     }
 }
