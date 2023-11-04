@@ -15,7 +15,7 @@ public interface VideoService {
      * 获取推荐视频
      * @return
      */
-    List<RecommendVideoVO> getRecommendVideo();
+    List<RecommendVideoVO> getRecommendVideo(Long categoryId);
 
     /**
      * 上传视频

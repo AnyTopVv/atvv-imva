@@ -25,9 +25,10 @@ public interface VideoDao {
     /**
      * 获取随机视频id
      * @param count 获取个数
+     * @param categoryId 分区id
      * @return id List
      */
-    List<Long> getRandomIds(@Param("count") int count);
+    List<Long> getRandomIds(@Param("count") int count, @Param("categoryId") Long categoryId);
 
     /**
      * 插入视频信息

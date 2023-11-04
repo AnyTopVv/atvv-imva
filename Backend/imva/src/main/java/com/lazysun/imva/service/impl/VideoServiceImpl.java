@@ -38,9 +38,12 @@ public class VideoServiceImpl implements VideoService {
 
 
     @Override
-    public List<RecommendVideoVO> getRecommendVideo() {
+    public List<RecommendVideoVO> getRecommendVideo(Long categoryId) {
         //获取随机id
-        List<Long> videoIds = videoDao.getRandomIds(5);
+        List<Long> videoIds = videoDao.getRandomIds(5,categoryId);
+        if (videoIds.isEmpty()) {
+            throw new ImvaServiceException(ErrorCode.VIDEO_NOT_FOUND);
+        }
         List<VideoDetailDto> videos = videoDao.findByIds(videoIds);
         List<RecommendVideoVO> list = new ArrayList<>();
         for (VideoDetailDto video : videos) {

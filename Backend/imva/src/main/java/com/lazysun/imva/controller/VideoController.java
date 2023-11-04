@@ -27,8 +27,8 @@ public class VideoController {
      * @return
      */
     @GetMapping("/getRecommendPageVideo")
-    public ResponseVO<List<RecommendVideoVO>> getRecommendPageVideo() {
-        List<RecommendVideoVO> list = videoService.getRecommendVideo();
+    public ResponseVO<List<RecommendVideoVO>> getRecommendPageVideo(Long categoryId) {
+        List<RecommendVideoVO> list = videoService.getRecommendVideo(categoryId);
         return ResponseVO.success(list);
     }
 
@@ -52,5 +52,7 @@ public class VideoController {
         videoService.uploadVideo(upLoadVideoDto);
         return  ResponseVO.success();
     }
+
+
 
 }
