@@ -61,8 +61,8 @@ public class VideoServiceImpl implements VideoService {
     public void uploadVideo(UpLoadVideoDto upLoadVideoDto) {
         Long userId = UserContext.getUserId();
         TempUploadFile tempUploadFile = tempUploadFileDao.getFileInfoByMD5(upLoadVideoDto.getMd5(), userId);
-        String tempVideoPath = FileConstant.TEMP_FILE_VIDEO_PATH + "/" + tempUploadFile.getFileName() + tempUploadFile.getFileExtension(),
-                videoPath = FileConstant.FILE_VIDEO_PATH + "/" + tempUploadFile.getFileName() + tempUploadFile.getFileExtension(),
+        String tempVideoPath = FileConstant.TEMP_FILE_VIDEO_PATH + "/" + tempUploadFile.getFileName()+ "." + tempUploadFile.getFileExtension(),
+                videoPath = FileConstant.FILE_VIDEO_PATH + "/" + tempUploadFile.getFileName() + "." + tempUploadFile.getFileExtension(),
                 tempPreviewPath = FileConstant.TEMP_FILE_PREVIEW_PATH + "/" + FileConstant.getFilePreviewPath(tempUploadFile.getFileName()),
                 previewPath = FileConstant.FILE_PREVIEW_PATH + "/" + FileConstant.getFilePreviewPath(tempUploadFile.getFileName());
         try {

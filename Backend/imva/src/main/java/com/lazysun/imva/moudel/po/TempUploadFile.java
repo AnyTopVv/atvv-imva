@@ -1,6 +1,7 @@
 package com.lazysun.imva.moudel.po;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 临时文件记录表
@@ -8,6 +9,7 @@ import lombok.Data;
  * @date: 2023/11/2 21:32
  */
 @Data
+@NoArgsConstructor
 public class TempUploadFile {
     /**
      * id
