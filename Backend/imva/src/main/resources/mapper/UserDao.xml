@@ -25,6 +25,6 @@
     </select>
 
     <insert id="insert">
-        INSERT INTO user(id,username,password,status,avatar) VALUES(NULL,#{username},#{password},#{status},NULL);
+        INSERT INTO user(id,username,password,status,avatar) VALUES(NULL,#{username},#{password},#{status},#{avatar});
     </insert>
 </mapper>

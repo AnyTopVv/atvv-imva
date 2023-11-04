@@ -1,9 +1,9 @@
 package com.lazysun.imva.utils;
 
-import cn.dev33.satoken.secure.SaBase64Util;
-import cn.dev33.satoken.secure.SaSecureUtil;
+
 import com.lazysun.imva.constant.ProviderConstant;
 import com.lazysun.imva.exception.ImvaServiceException;
+import org.springframework.util.DigestUtils;
 
 import javax.crypto.Cipher;
 import java.nio.charset.StandardCharsets;
@@ -41,7 +41,7 @@ public class SecureUtil {
      * @return
      */
     public static String md5Encrypt(String text){
-        return SaSecureUtil.md5(text);
+        return DigestUtils.md5DigestAsHex((text).getBytes());
     }
 
     /**

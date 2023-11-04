@@ -1,13 +1,13 @@
 package com.lazysun.imva.service.impl;
 
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.lazysun.imva.constant.ErrorCode;
 import com.lazysun.imva.constant.FileConstant;
 import com.lazysun.imva.dao.TempUploadFileDao;
 import com.lazysun.imva.dao.VideoDao;
 import com.lazysun.imva.exception.ImvaServiceException;
 import com.lazysun.imva.moudel.dto.UpLoadVideoDto;
+import com.lazysun.imva.moudel.dto.UserContext;
 import com.lazysun.imva.moudel.dto.VideoDetailDto;
 import com.lazysun.imva.moudel.po.TempUploadFile;
 import com.lazysun.imva.moudel.po.Video;
@@ -54,7 +54,7 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public void uploadVideo(UpLoadVideoDto upLoadVideoDto) {
-        Long userId = StpUtil.getLoginIdAsLong();
+        Long userId = UserContext.getUserId();
         TempUploadFile tempUploadFile = tempUploadFileDao.getFileInfoByMD5(upLoadVideoDto.getMd5(), userId);
         String tempVideoPath = FileConstant.TEMP_FILE_VIDEO_PATH + "/" + tempUploadFile.getFileName() + tempUploadFile.getFileExtension(),
                 videoPath = FileConstant.FILE_VIDEO_PATH + "/" + tempUploadFile.getFileName() + tempUploadFile.getFileExtension(),
