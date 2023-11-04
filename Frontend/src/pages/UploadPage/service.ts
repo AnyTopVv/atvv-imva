@@ -85,7 +85,7 @@ const getChunk = (md5: any, fileExtension: any) => {
       fileExtension: result,
     },
     headers: {
-      "satoken": localStorage.getItem('access_token'), //关键代码，注意参数名字是 satoken
+      'Authorization': localStorage.getItem('access_token'),
     },
     // isJson: true,
   })
@@ -125,7 +125,7 @@ export const uploadFile = async (fileMd5Value: any, fileName: any, fileChunkList
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
-        "satoken": localStorage.getItem('access_token'), //关键代码，注意参数名字是 satoken
+        'Authorization': localStorage.getItem('access_token'),
       },
     }).then(() => {
       let percent = progressCurrent / fileChunkList.length * 100 | 0
@@ -149,7 +149,7 @@ export const uploadFile = async (fileMd5Value: any, fileName: any, fileChunkList
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
-        "satoken": localStorage.getItem('access_token'), //关键代码，注意参数名字是 satoken
+        'Authorization': localStorage.getItem('access_token'),
       },
     }).then(res => {
       console.log(res);
@@ -170,7 +170,7 @@ export const videoUpload = (data: any) => {
     data: data,
     headers: {
       'Content-Type': 'application/json',
-      "satoken": localStorage.getItem('access_token'), //关键代码，注意参数名字是 satoken
+      'Authorization': localStorage.getItem('access_token'),
     },
   }).then(res => {
     if (res && res.status === 200) {

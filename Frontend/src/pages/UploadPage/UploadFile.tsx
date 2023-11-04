@@ -162,7 +162,7 @@ class UploadFile extends Component<any> {
           <p>
             {this.state.file ? this.state.percent === 100 ? `${this.state.file.name}上传成功` : `${this.state.file.name}上传中...` : `待上传视频`}
           </p>
-          <Progress percent={this.state.percent} />
+          <Progress percent={this.state.percent} strokeColor="#776ce9" />
           {/* <Button type="primary" onClick={this.onClose}>
             取消上传
           </Button> */}
