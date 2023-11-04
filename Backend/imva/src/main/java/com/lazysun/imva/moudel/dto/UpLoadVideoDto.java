@@ -3,6 +3,7 @@ package com.lazysun.imva.moudel.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * 视频上传dto
@@ -21,7 +22,7 @@ public class UpLoadVideoDto {
     /**
      * 分区id
      */
-    @NotBlank(message = "分区id不能为空")
+    @NotNull(message = "分区id不能为空")
     private Long categoryId;
 
     /**
