@@ -3,6 +3,7 @@ package com.lazysun.imva.service.impl;
 
 import com.lazysun.imva.constant.ErrorCode;
 import com.lazysun.imva.constant.FileConstant;
+import com.lazysun.imva.constant.RedisConstant;
 import com.lazysun.imva.dao.TempUploadFileDao;
 import com.lazysun.imva.dao.VideoDao;
 import com.lazysun.imva.exception.ImvaServiceException;
@@ -14,14 +15,13 @@ import com.lazysun.imva.moudel.po.Video;
 import com.lazysun.imva.moudel.vo.RecommendVideoVO;
 import com.lazysun.imva.service.VideoService;
 import com.lazysun.imva.utils.QiNiuUtil;
+import com.lazysun.imva.utils.RedisUtil;
 import com.qiniu.common.QiniuException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author: zoy0
@@ -40,11 +40,20 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public List<RecommendVideoVO> getRecommendVideo(Long categoryId) {
         //获取随机id
-        List<Long> videoIds = videoDao.getRandomIds(5,categoryId);
-        if (videoIds.isEmpty()) {
+        Long userId = UserContext.getUserId();
+        List<Long> videoIdsList = RedisUtil.lGet(RedisConstant.getUserRecommendVideIdKey(Objects.isNull(userId) ? 0 : userId, categoryId), 5).stream().map(o -> Long.valueOf(o.toString())).collect(Collectors.toList());
+        if (videoIdsList.isEmpty()) {
+            List<Long> videoIds = videoDao.getRandomIds(25, categoryId);
+            Collections.shuffle(videoIds);
+            videoIdsList = videoIds.stream().limit(5).collect(Collectors.toList());
+            if (videoIds.size() > 5){
+                RedisUtil.lSet(RedisConstant.getUserRecommendVideIdKey(Objects.isNull(userId) ? 0 : userId, categoryId), Arrays.asList(videoIds.subList(5,videoIds.size() - 1).toArray()), RedisConstant.COMMON_EXPIRE_TIME);
+            }
+        }
+        if (videoIdsList.isEmpty()){
             throw new ImvaServiceException(ErrorCode.VIDEO_NOT_FOUND);
         }
-        List<VideoDetailDto> videos = videoDao.findByIds(videoIds);
+        List<VideoDetailDto> videos = videoDao.findByIds(videoIdsList);
         List<RecommendVideoVO> list = new ArrayList<>();
         for (VideoDetailDto video : videos) {
             RecommendVideoVO recommendVideoVO = RecommendVideoVO.build(video);
@@ -61,7 +70,7 @@ public class VideoServiceImpl implements VideoService {
     public void uploadVideo(UpLoadVideoDto upLoadVideoDto) {
         Long userId = UserContext.getUserId();
         TempUploadFile tempUploadFile = tempUploadFileDao.getFileInfoByMD5(upLoadVideoDto.getMd5(), userId);
-        String tempVideoPath = FileConstant.TEMP_FILE_VIDEO_PATH + "/" + tempUploadFile.getFileName()+ "." + tempUploadFile.getFileExtension(),
+        String tempVideoPath = FileConstant.TEMP_FILE_VIDEO_PATH + "/" + tempUploadFile.getFileName() + "." + tempUploadFile.getFileExtension(),
                 videoPath = FileConstant.FILE_VIDEO_PATH + "/" + tempUploadFile.getFileName() + "." + tempUploadFile.getFileExtension(),
                 tempPreviewPath = FileConstant.TEMP_FILE_PREVIEW_PATH + "/" + FileConstant.getFilePreviewPath(tempUploadFile.getFileName()),
                 previewPath = FileConstant.FILE_PREVIEW_PATH + "/" + FileConstant.getFilePreviewPath(tempUploadFile.getFileName());
@@ -87,7 +96,7 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public RecommendVideoVO getVideoDetailById(Long videoId) {
         List<VideoDetailDto> videoDetailDtoList = videoDao.findByIds(Collections.singletonList(videoId));
-        if (videoDetailDtoList.isEmpty()){
+        if (videoDetailDtoList.isEmpty()) {
             throw new ImvaServiceException(ErrorCode.VIDEO_NOT_FOUND);
         }
         VideoDetailDto video = videoDetailDtoList.get(0);
