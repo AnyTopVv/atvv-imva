@@ -20,7 +20,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registration.excludePathPatterns(    //添加不拦截路径
                 "/user/login",                 //登录
                 "/user/register",               //注册
-                "/video/getRecommendPageVideo"
+                "/video/getRecommendPageVideo",
+                "/video/detail"
         );
     }
 }

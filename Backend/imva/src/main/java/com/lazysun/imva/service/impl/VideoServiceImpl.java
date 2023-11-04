@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -77,6 +79,20 @@ public class VideoServiceImpl implements VideoService {
         video.setLike(0);
         video.setStar(0);
         videoDao.insert(video);
+    }
+
+    @Override
+    public RecommendVideoVO getVideoDetailById(Long videoId) {
+        List<VideoDetailDto> videoDetailDtoList = videoDao.findByIds(Collections.singletonList(videoId));
+        if (videoDetailDtoList.isEmpty()){
+            throw new ImvaServiceException(ErrorCode.VIDEO_NOT_FOUND);
+        }
+        VideoDetailDto video = videoDetailDtoList.get(0);
+        RecommendVideoVO videoVO = RecommendVideoVO.build(video);
+        videoVO.setVideoPreview(QiNiuUtil.getDownloadUrl(video.getPreviewPath(), null));
+        videoVO.setVideoSrc(QiNiuUtil.getDownloadUrl(video.getFilePath(), null));
+        videoVO.setAuthorAvatarSrc(QiNiuUtil.getDownloadUrl(video.getAuthorAvatar(), null));
+        return videoVO;
     }
 
 }

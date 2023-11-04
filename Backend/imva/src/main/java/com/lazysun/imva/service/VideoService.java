@@ -22,4 +22,6 @@ public interface VideoService {
      * @param upLoadVideoDto
      */
     void uploadVideo(UpLoadVideoDto upLoadVideoDto);
+
+    RecommendVideoVO getVideoDetailById(Long videoId);
 }
