@@ -1,5 +1,6 @@
 package com.lazysun.imva.config;
 
+import com.lazysun.imva.interceptor.UserInfoInterceptor;
 import com.lazysun.imva.interceptor.UserLoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
@@ -24,5 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 "/video/detail",
                 "/category/getAll"
         );
+        registry.addInterceptor(new UserInfoInterceptor()).
+                addPathPatterns("/**");
     }
 }
