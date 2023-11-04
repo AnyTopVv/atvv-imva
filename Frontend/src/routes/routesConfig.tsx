@@ -1,4 +1,5 @@
 import { firstLevelMenuEnum } from '@/utils/constant';
+import { AliwangwangFilled, AppleFilled, CustomerServiceFilled, DribbbleCircleFilled, FireFilled, FlagFilled, LikeFilled, ReadFilled, ShoppingFilled, SmileFilled } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Link } from 'react-router-dom';
 
@@ -21,8 +22,8 @@ const firstLevelMenuItems = Object.keys(firstLevelMenuEnum);  // 一级菜单项
 const getMenuItem = (
   label: React.ReactNode,
   key: React.Key,
-  children?: MenuItem[],
   icon?: React.ReactNode,
+  children?: MenuItem[],
 ): MenuItem => (
   {
     key,
@@ -31,6 +32,46 @@ const getMenuItem = (
     label,
   } as MenuItem
 );
+
+const getIcon = (key: string) => {
+  let icon = undefined;
+  switch (key) {
+    case 'recommend':
+      icon = <LikeFilled />
+      break;
+    case 'knowledge':
+      icon = <ReadFilled />
+      break;
+    case 'hot':
+      icon = <FireFilled />
+      break;
+    case 'game':
+      icon = <FlagFilled />
+      break;
+    case 'amusement':
+      icon = <SmileFilled />
+      break;
+    case 'nichigen':
+      icon = <AliwangwangFilled />
+      break;
+    case 'music':
+      icon = <CustomerServiceFilled />
+      break;
+    case 'food':
+      icon = <AppleFilled />
+      break;
+    case 'pe':
+      icon = <DribbbleCircleFilled />
+      break;
+    case 'fasion':
+      icon = <ShoppingFilled />
+      break;
+    default:
+      icon = undefined;
+      break;
+  }
+  return icon
+}
 
 /**
  * 获取页面组件路径
@@ -43,9 +84,11 @@ const getComponentPath = (name: string) => `/src/pages/siderPages/${name}/index.
 const meunItems: MenuItem[] = [];
 firstLevelMenuItems.forEach(key => {
   const label = firstLevelMenuEnum[key as keyof typeof firstLevelMenuEnum];
+  const icon = getIcon(key);
   meunItems.push(getMenuItem(
     <Link to={key} >{label}</Link>,
-    key)
+    key,
+    icon)
   )
 })
 export { meunItems };

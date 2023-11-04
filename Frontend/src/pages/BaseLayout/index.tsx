@@ -1,4 +1,4 @@
-import { Button, Input, Layout, Menu, Image, Avatar, Popover } from 'antd';
+import { Button, Layout, Menu, Image, Avatar, Popover } from 'antd';
 import SiderRouters from '@/routes/SiderRoutes';
 import { meunItems } from '@/routes/routesConfig';
 import { useRef, type FC, type ReactElement } from 'react';
@@ -33,13 +33,14 @@ const BaseLayout: FC = (): ReactElement => {
         <Sider
           style={{
             overflowY: 'auto',
+            backgroundColor: '#f4f1fc',
           }}
-          theme='light' trigger={null}
+          theme='light' trigger={null} width={150}
         >
           <div style={{ padding: '20px', display: 'flex', justifyContent: 'center' }}>
-            <Image alt="ATVV-IMVA" preview={false} src={atvvWordsSrc} height={50} />
+            <Image alt="ATVV-IMVA" preview={false} src={atvvWordsSrc} />
           </div>
-          <Menu mode='inline' items={meunItems} style={{ padding: '5px' }} />
+          <Menu mode='inline' items={meunItems} style={{ padding: '5px', backgroundColor: 'transparent', fontSize: '16px', color: '#474747' }} />
         </Sider>
         <Layout>
           <Header
@@ -49,65 +50,72 @@ const BaseLayout: FC = (): ReactElement => {
               height: '8%',
               lineHeight: '8%',
               fontSize: '20px',
-              borderBottom: '1px solid #EDEDED',
-              backgroundColor: '#F5F5F5'
+              borderBottom: '1px solid rgba(5, 5, 5, 0.06)',
+              backgroundColor: '#f4f1fc'
             }}
           >
-            <Input.Search></Input.Search>
-            {
-              isLogin ?
-                <Button type="text" icon={<PlusSquareOutlined />} onClick={() => { navigate('/upload') }}>
-                  投稿
-                </Button> :
-                null
-            }
-            {username ? avatar ? <Popover
-              placement="bottom"
-              title={<>
-                <div>{username}</div>
-              </>}
-              content={<>
-                <Button onClick={exitLogin}>退出登录</Button>
-              </>}
-            >
-              <div style={{ cursor: "pointer" }} >
-                <Avatar src={avatar} />
-              </div>
-            </Popover> :
-              <Popover
-                placement="bottom"
-                title={<>
-                  <div>{username}</div>
-                </>}
-                content={<>
-                  <Button onClick={exitLogin}>退出登录</Button>
-                </>}
-              >
-                <div style={{ cursor: "pointer" }} >
-                  <Avatar>{username}</Avatar>
-                </div>
-              </Popover> :
-              <Button
-                type='primary'
-                icon={<UserOutlined />}
-                onClick={() => {
-                  LoginModalRef.current.open();
-                }}
-              >
-                登录
-              </Button>
-            }
+            {/* <Input.Search></Input.Search> */}
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'row-reverse', verticalAlign: 'middle' }} >
+              {username ?
+                avatar ?
+                  <Popover
+                    placement="bottom"
+                    title={<>
+                      <div>{username}</div>
+                    </>}
+                    content={<>
+                      <Button onClick={exitLogin}>退出登录</Button>
+                    </>}
+                  >
+                    <div style={{ cursor: "pointer" }} >
+                      <Avatar size={52} src={avatar} />
+                    </div>
+                  </Popover> :
+                  <Popover
+                    placement="bottom"
+                    title={<>
+                      <div>{username}</div>
+                    </>}
+                    content={<>
+                      <Button onClick={exitLogin}>退出登录</Button>
+                    </>}
+                  >
+                    <div style={{ cursor: "pointer" }} >
+                      <Avatar style={{ backgroundColor: '#776ce9', verticalAlign: 'middle' }} size={52} >{username}</Avatar>
+                    </div>
+                  </Popover> :
+                <Button
+                  type='primary'
+                  icon={<UserOutlined />}
+                  onClick={() => {
+                    LoginModalRef.current.open();
+                  }}
+                >
+                  登录
+                </Button>
+              }
+              {
+                isLogin ?
+                  <Button style={{ height: '52px' }} type="text" onClick={() => { navigate('/upload') }}>
+                    <PlusSquareOutlined />
+                    <div>投稿</div>
+                  </Button> :
+                  null
+              }
+            </div>
           </Header>
           <Content
             style={{
               padding: '10px',
               overflow: 'auto',
+              // backgroundColor: '#f4f1fc',
+              backgroundColor: '#f4f1fc',
             }}
           >
             <SiderRouters />
           </Content>
         </Layout>
-      </Layout>
+      </Layout >
       <LoginModal modalRef={LoginModalRef} />
     </>
   )

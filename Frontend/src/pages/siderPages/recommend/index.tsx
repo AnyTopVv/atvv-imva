@@ -138,7 +138,7 @@ const Recommend: React.FC = () => {
               },
               // preloadTime: 10,  // 预加载固定10s的内容
             };
-            return <PubPlayer key={index} getRef={getRef} playerConfig={playerConfig} videoData={videoData} index={index} isFullscreen={isFullscreen} />
+            return <PubPlayer key={index} getRef={getRef} playerConfig={playerConfig} isFullscreen={isFullscreen} />
           })}
         </Slider>
         <ul className={styles.videoSwitcher}>

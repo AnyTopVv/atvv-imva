@@ -21,7 +21,6 @@ const UploadPage1: FC = (): ReactElement => {
   const [formIns] = Form.useForm();
 
   const onFinish = async (values: any) => {
-    console.log(values);
     const formData = deepClone({
       videoName: values.videoName,
       md5: values.md5,
@@ -37,8 +36,8 @@ const UploadPage1: FC = (): ReactElement => {
     })
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+  const onFinishFailed = (_errorInfo: any) => {
+    // console.log('Failed:', errorInfo);
   };
 
   // 获取 UploadFile 中的 fileList
@@ -52,7 +51,7 @@ const UploadPage1: FC = (): ReactElement => {
 
   return (
     <>
-      <Card style={{ width: '100%', height: '100%', minWidth: 600 }}>
+      <Card style={{ width: '100%', height: '100%', minWidth: 600, backgroundColor: '#f8f6ff', }}>
         <div className='upload-page' style={{ display: 'flex', justifyContent: 'center' }}>
           <Form
             name="upload"
