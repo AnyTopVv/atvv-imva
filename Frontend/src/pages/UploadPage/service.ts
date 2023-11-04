@@ -4,19 +4,6 @@ import SparkMD5 from 'spark-md5'
 
 const spark = new SparkMD5.ArrayBuffer()
 
-export const addCollectedFileThunk = (data: any) => {
-  console.log(data);
-  // axios.post(collectedFileUrl.addCollectedFile, data).then(res => {
-  //   if (res && res.data.code === 200) {
-  //     resolve(res.data)
-  //   } else {
-  //     reject(res.data)
-  //   }
-  // }).catch(err => {
-  //   reject(err.response.data.message)
-  // })
-}
-
 /**
  * 文件切片
  * @param {file} file

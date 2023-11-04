@@ -8,6 +8,7 @@ import type { FC, ReactElement } from 'react';
 import UploadPage from '@/pages/UploadPage';
 import { useAppSelector } from '@/redux/hooks';
 import { selectIsLogin } from '@/redux/features/isLogin/isLoginSlice';
+import VideoPage from '@/pages/VideoPage';
 
 const SiderRouters: FC = (): ReactElement => {
   const isLogin = useAppSelector(selectIsLogin);
@@ -28,7 +29,13 @@ const SiderRouters: FC = (): ReactElement => {
         <Route
           path="/upload"
           element={
-            isLogin ? <UploadPage /> : <PageNotFound msg="请登录后访问该页面" />
+            isLogin ? <UploadPage /> : <PageNotFound msg="请登录后访问该页面" status="403" />
+          }
+        />
+        <Route
+          path="/video/*"
+          element={
+            <VideoPage />
           }
         />
         <Route path="*" element={<PageNotFound />} />

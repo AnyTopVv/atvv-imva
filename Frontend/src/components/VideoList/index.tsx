@@ -4,6 +4,9 @@ import { Masonry } from 'react-plock';
 import { Card, Image } from 'antd';
 import Loading from '../Loading';
 import useLatest from '@/hooks/useLatest';
+import { useNavigate } from 'react-router-dom';
+
+const { Meta } = Card;
 
 const VideoList: React.FC<any> = (props: { category: string }) => {
   const { category } = props;
@@ -12,6 +15,7 @@ const VideoList: React.FC<any> = (props: { category: string }) => {
   const [isLoading, setIsLoading] = useState(true); // 当前是否正在加载数据
   const [hasMore, setHasMore] = useState(true); // 当前是否还有更多数据可供加载
   const latestDataRef = useLatest(data);
+  const navigate = useNavigate();
 
   const appendVideos = (res: any) => {
     setData(latestDataRef.current.concat(res));
@@ -66,20 +70,21 @@ const VideoList: React.FC<any> = (props: { category: string }) => {
           items={data}
           config={{
             columns: [1, 2, 3, 4, 5],
-            gap: [24, 12, 6, 6, 6],
+            gap: [24, 12, 12, 12, 12],
             media: [640, 768, 1024, 1280, 1400],
           }}
           render={(item: any, index) => (
-            <Card
-              key={index}
-              hoverable
-              size="small"
-              cover={<Image src={item.videoPreview} preview={false} height={200} />}
-              style={{ width: '100%', height: 'auto' }}
-            >
-              <div>{item.title}</div>
-              <div>{item.author}</div>
-            </Card>
+            <div onClick={() => { navigate(`/video/${item.uuid}`) }}>
+              <Card
+                key={index}
+                hoverable
+                size="small"
+                cover={<Image src={item.videoPreview} preview={false} height={200} />}
+                style={{ width: '100%', height: 'auto' }}
+              >
+                <Meta title={item.title} description={item.author} />
+              </Card>
+            </div>
           )}
         />
         <div style={{ height: '50px' }} >{isLoading && <Loading />}</div>

@@ -1,13 +1,13 @@
 import { Result } from 'antd';
 import type { FC, ReactElement } from 'react';
 
-const PageNotFound: FC<any> = (props: { msg?: string }): ReactElement => {
-  const { msg } = props;
+const PageNotFound: FC<any> = (props: { msg?: string, status?: "404" | "403" }): ReactElement => {
+  const { msg, status } = props;
 
   return (
     <Result
-      title="404"
-      status="404"
+      title={status || "404"}
+      status={status || "404"}
       style={{
         paddingTop: '100px',
       }}

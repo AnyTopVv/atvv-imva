@@ -15,6 +15,7 @@ interface LoginModalProps {
 const LoginModal = (props: LoginModalProps): ReactElement => {
   const { modalRef } = props; // 从props传入modalRef
   const [isModalOpen, setIsModalOpen] = useState(false);  // 设置模态框的可见状态
+  const [activeKey, setActiveKey] = useState('login');
   const dispatch = useAppDispatch();
 
   const modalStyles = {
@@ -40,6 +41,10 @@ const LoginModal = (props: LoginModalProps): ReactElement => {
       }
     };
   });
+
+  const onTabClick = (key: string) => {
+    setActiveKey(key);
+  }
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -86,6 +91,7 @@ const LoginModal = (props: LoginModalProps): ReactElement => {
     userRegister(formData).then((res: any) => {
       if (res.data.code === 0) {
         message.success("注册成功！马上登录吧！");
+        setActiveKey("register");
       } else {
         message.error(res.data.msg || "注册失败！请稍后重试！");
       }
@@ -105,6 +111,8 @@ const LoginModal = (props: LoginModalProps): ReactElement => {
         centered
       >
         <Tabs
+          activeKey={activeKey}
+          onTabClick={onTabClick}
           defaultActiveKey="login"
           centered
           items={[
