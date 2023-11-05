@@ -27,8 +27,9 @@ public class VideoController {
      * @return
      */
     @GetMapping("/getRecommendPageVideo")
-    public ResponseVO<List<RecommendVideoVO>> getRecommendPageVideo(Long categoryId) {
-        List<RecommendVideoVO> list = videoService.getRecommendVideo(categoryId);
+    public ResponseVO<List<RecommendVideoVO>> getRecommendPageVideo(Long categoryId,@RequestParam(value = "count", required = false, defaultValue = "5")Integer count) {
+
+        List<RecommendVideoVO> list = videoService.getRecommendVideo(categoryId,count);
         return ResponseVO.success(list);
     }
 

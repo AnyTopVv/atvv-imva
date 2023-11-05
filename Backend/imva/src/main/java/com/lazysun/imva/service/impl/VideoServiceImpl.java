@@ -38,16 +38,16 @@ public class VideoServiceImpl implements VideoService {
 
 
     @Override
-    public List<RecommendVideoVO> getRecommendVideo(Long categoryId) {
+    public List<RecommendVideoVO> getRecommendVideo(Long categoryId, int count) {
         //获取随机id
         Long userId = UserContext.getUserId();
-        List<Long> videoIdsList = RedisUtil.lGet(RedisConstant.getUserRecommendVideIdKey(Objects.isNull(userId) ? 0 : userId, categoryId), 5).stream().map(o -> Long.valueOf(o.toString())).collect(Collectors.toList());
+        List<Long> videoIdsList = RedisUtil.lGet(RedisConstant.getUserRecommendVideIdKey(Objects.isNull(userId) ? 0 : userId, categoryId), count).stream().map(o -> Long.valueOf(o.toString())).collect(Collectors.toList());
         if (videoIdsList.isEmpty()) {
-            List<Long> videoIds = videoDao.getRandomIds(25, categoryId);
+            List<Long> videoIds = videoDao.getRandomIds(25 + count, categoryId);
             Collections.shuffle(videoIds);
-            videoIdsList = videoIds.stream().limit(5).collect(Collectors.toList());
-            if (videoIds.size() > 5){
-                RedisUtil.lSet(RedisConstant.getUserRecommendVideIdKey(Objects.isNull(userId) ? 0 : userId, categoryId), Arrays.asList(videoIds.subList(5,videoIds.size() - 1).toArray()), RedisConstant.COMMON_EXPIRE_TIME);
+            videoIdsList = videoIds.stream().limit(count).collect(Collectors.toList());
+            if (videoIds.size() > count){
+                RedisUtil.lSet(RedisConstant.getUserRecommendVideIdKey(Objects.isNull(userId) ? 0 : userId, categoryId), Arrays.asList(videoIds.subList(count,videoIds.size() - 1).toArray()), RedisConstant.COMMON_EXPIRE_TIME);
             }
         }
         if (videoIdsList.isEmpty()){
