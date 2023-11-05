@@ -63,6 +63,14 @@ public class VideoServiceImpl implements VideoService {
         for (VideoDetailDto video : videos) {
             RecommendVideoVO recommendVideoVO = RecommendVideoVO.build(video);
             //TODO 头像和和缩略图不必放在私有空间
+            if (Objects.nonNull(userId)){
+                if (RedisUtil.setHasKey(RedisConstant.getVideoLikesUserSetKey(video.getId()),userId)){
+                    recommendVideoVO.setUserLike(1);
+                }
+                if (RedisUtil.setHasKey(RedisConstant.getVideoStarsUserSetKey(video.getId()),userId)){
+                    recommendVideoVO.setUserStar(1);
+                }
+            }
             recommendVideoVO.setVideoPreview(QiNiuUtil.getDownloadUrl(video.getPreviewPath(), null));
             recommendVideoVO.setVideoSrc(QiNiuUtil.getDownloadUrl(video.getFilePath(), null));
             recommendVideoVO.setAuthorAvatarSrc(QiNiuUtil.getDownloadUrl(video.getAuthorAvatar(), null));
@@ -100,12 +108,21 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public RecommendVideoVO getVideoDetailById(Long videoId) {
+        Long userId = UserContext.getUserId();
         List<VideoDetailDto> videoDetailDtoList = videoDao.findByIds(Collections.singletonList(videoId));
         if (videoDetailDtoList.isEmpty()) {
             throw new ImvaServiceException(ErrorCode.VIDEO_NOT_FOUND);
         }
         VideoDetailDto video = videoDetailDtoList.get(0);
         RecommendVideoVO videoVO = RecommendVideoVO.build(video);
+        if (Objects.nonNull(userId)){
+            if (RedisUtil.setHasKey(RedisConstant.getVideoLikesUserSetKey(video.getId()),userId)){
+                videoVO.setUserLike(1);
+            }
+            if (RedisUtil.setHasKey(RedisConstant.getVideoStarsUserSetKey(video.getId()),userId)){
+                videoVO.setUserStar(1);
+            }
+        }
         videoVO.setVideoPreview(QiNiuUtil.getDownloadUrl(video.getPreviewPath(), null));
         videoVO.setVideoSrc(QiNiuUtil.getDownloadUrl(video.getFilePath(), null));
         videoVO.setAuthorAvatarSrc(QiNiuUtil.getDownloadUrl(video.getAuthorAvatar(), null));
