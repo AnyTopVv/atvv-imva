@@ -2,8 +2,10 @@ package com.lazysun.imva.controller;
 
 import com.lazysun.imva.moudel.dto.UpLoadVideoDto;
 import com.lazysun.imva.moudel.dto.VideoDetailDto;
+import com.lazysun.imva.moudel.dto.VideoLikesDto;
 import com.lazysun.imva.moudel.vo.RecommendVideoVO;
 import com.lazysun.imva.moudel.vo.ResponseVO;
+import com.lazysun.imva.service.VideoLikesService;
 import com.lazysun.imva.service.VideoService;
 import org.springframework.web.bind.annotation.*;
 

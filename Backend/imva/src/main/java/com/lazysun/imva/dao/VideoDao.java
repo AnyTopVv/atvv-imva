@@ -36,4 +36,8 @@ public interface VideoDao {
      * @return
      */
     boolean insert(Video video);
+
+    Integer count(@Param("categoryId")Long categoryId);
+
+    List<Long> getAllIds(@Param("categoryId")Long categoryId);
 }

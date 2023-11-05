@@ -58,6 +58,10 @@ public class RecommendVideoVO {
      */
     private Integer stars;
 
+    private Integer userLike;
+
+    private Integer userStar;
+
     public static RecommendVideoVO build(VideoDetailDto video) {
         RecommendVideoVO recommendVideoVO = new RecommendVideoVO();
         recommendVideoVO.setUuid(video.getId());
@@ -66,6 +70,8 @@ public class RecommendVideoVO {
         recommendVideoVO.setStars(video.getStar());
         recommendVideoVO.setTitle(video.getVideoName());
         recommendVideoVO.setLikes(video.getLike());
+        recommendVideoVO.setUserLike(0);
+        recommendVideoVO.setUserStar(0);
         return recommendVideoVO;
     }
 }

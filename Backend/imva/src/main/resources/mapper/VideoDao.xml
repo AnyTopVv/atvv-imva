@@ -51,6 +51,24 @@
         LIMIT #{count};
     </select>
 
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(*) FROM video
+        <where>
+            <if test="categoryId != null">
+                category_id = #{categoryId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAllIds" resultType="java.lang.Long">
+        SELECT id FROM video
+        <where>
+            <if test="categoryId != null">
+                category_id = #{categoryId}
+            </if>
+        </where>
+    </select>
+
 
     <insert id="insert">
         INSERT INTO video (video_name, file_path, preview_path, author_id, category_id, `like`, star)
