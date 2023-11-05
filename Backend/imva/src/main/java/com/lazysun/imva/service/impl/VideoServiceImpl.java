@@ -43,14 +43,19 @@ public class VideoServiceImpl implements VideoService {
         Long userId = UserContext.getUserId();
         List<Long> videoIdsList = RedisUtil.lGet(RedisConstant.getUserRecommendVideIdKey(Objects.isNull(userId) ? 0 : userId, categoryId), count).stream().map(o -> Long.valueOf(o.toString())).collect(Collectors.toList());
         if (videoIdsList.isEmpty()) {
-            List<Long> videoIds = videoDao.getRandomIds(25 + count, categoryId);
+            List<Long> videoIds;
+            if (videoDao.count(categoryId) < count + 25) {
+                videoIds = videoDao.getAllIds(categoryId);
+            } else {
+                videoIds = videoDao.getRandomIds(25 + count, categoryId);
+            }
             Collections.shuffle(videoIds);
             videoIdsList = videoIds.stream().limit(count).collect(Collectors.toList());
-            if (videoIds.size() > count){
-                RedisUtil.lSet(RedisConstant.getUserRecommendVideIdKey(Objects.isNull(userId) ? 0 : userId, categoryId), Arrays.asList(videoIds.subList(count,videoIds.size() - 1).toArray()), RedisConstant.COMMON_EXPIRE_TIME);
+            if (videoIds.size() > count) {
+                RedisUtil.lSet(RedisConstant.getUserRecommendVideIdKey(Objects.isNull(userId) ? 0 : userId, categoryId), Arrays.asList(videoIds.subList(count, videoIds.size() - 1).toArray()), RedisConstant.COMMON_EXPIRE_TIME);
             }
         }
-        if (videoIdsList.isEmpty()){
+        if (videoIdsList.isEmpty()) {
             throw new ImvaServiceException(ErrorCode.VIDEO_NOT_FOUND);
         }
         List<VideoDetailDto> videos = videoDao.findByIds(videoIdsList);
