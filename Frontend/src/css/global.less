@@ -31,10 +31,119 @@ html ::-webkit-scrollbar-corner {
 /* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 @font-face {
   font-family: 'iconfont-atvv-imva';  /* Project id 4306498 */
-  src: url('//at.alicdn.com/t/c/font_4306498_ke37xvkfx7.eot?t=1698563808616'); /* IE9 */
-  src: url('//at.alicdn.com/t/c/font_4306498_ke37xvkfx7.eot?t=1698563808616#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('//at.alicdn.com/t/c/font_4306498_ke37xvkfx7.woff2?t=1698563808616') format('woff2'),
-       url('//at.alicdn.com/t/c/font_4306498_ke37xvkfx7.woff?t=1698563808616') format('woff'),
-       url('//at.alicdn.com/t/c/font_4306498_ke37xvkfx7.ttf?t=1698563808616') format('truetype'),
-       url('//at.alicdn.com/t/c/font_4306498_ke37xvkfx7.svg?t=1698563808616#iconfont-atvv-imva') format('svg');
+  src: url('//at.alicdn.com/t/c/font_4306498_a7qyw3l1awb.eot?t=1699172014268'); /* IE9 */
+  src: url('//at.alicdn.com/t/c/font_4306498_a7qyw3l1awb.eot?t=1699172014268#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('//at.alicdn.com/t/c/font_4306498_a7qyw3l1awb.woff2?t=1699172014268') format('woff2'),
+       url('//at.alicdn.com/t/c/font_4306498_a7qyw3l1awb.woff?t=1699172014268') format('woff'),
+       url('//at.alicdn.com/t/c/font_4306498_a7qyw3l1awb.ttf?t=1699172014268') format('truetype'),
+       url('//at.alicdn.com/t/c/font_4306498_a7qyw3l1awb.svg?t=1699172014268#iconfont-atvv-imva') format('svg');
+}
+
+// 播放器
+// .xgplayer .xg-right-bar {
+//   width: 60px;
+// }
+
+.xgplayer .xg-right-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 60px;
+  position: absolute;
+  top: calc(50% + 20px);
+}
+
+.xgplayer .xg-right-bar > div > div {
+  cursor: pointer;
+  width: 40px;
+  margin-bottom: 15px;
+  font-size: 22px;
+  text-align: center;
+  color: hsla(0,0%,100%,.9);
+}
+
+.xgplayer .xg-right-bar > div > div:hover {
+  color: #fff;
+}
+
+.xgplayer .xg-right-bar > div > div > span {
+  display: block;
+  font-size: 14px;
+}
+
+.xgplayer .xg-right-bar > .custom-avatar-plugin> .custom-author-avatar {
+  top: calc(50% + 40px);
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: #363741;
+}
+
+.xgplayer .xg-right-bar > .custom-avatar-plugin> .custom-author-avatar > div {
+  display: block;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.xgplayer .xg-right-bar > .custom-avatar-plugin> .custom-author-avatar > div > img {
+  display: block;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.xgplayer .xg-right-bar > .custom-like-plugin > .custom-like-icon::before {
+  font-size: 26px;
+  display: block;
+  font-family: 'iconfont-atvv-imva';
+  content: '\e8c3';
+}
+
+.xgplayer .xg-right-bar >.custom-comment-plugin> .custom-comment-icon::before {
+  display: block;
+  font-family: 'iconfont-atvv-imva';
+  content: '\e63a';
+}
+
+.xgplayer .xg-right-bar >.custom-star-plugin> .custom-star-icon::before {
+  display: block;
+  font-family: 'iconfont-atvv-imva';
+  content: '\e62b';
+}
+
+.xgplayer .xg-right-bar >.custom-share-plugin > .custom-share-icon::before {
+  display: block;
+  font-family: 'iconfont-atvv-imva';
+  content: '\e72f';
+}
+
+.xgplayer .xgplayer-controls .custom-auto-next {
+  position: relative;
+  top: 6px;
+  font-size: 12px;
+  line-height: 30px;
+  color: #d3d1d2;
+}
+
+.xgplayer .xgplayer-controls .custom-auto-next > div {
+  float: left;
+}
+
+.xgplayer .xgplayer-controls .custom-auto-next > .custom-auto-next-switcher {
+  cursor: pointer;
+  height: 18px;
+  width: 30px;
+  margin: 6px 0 0 3px;
+  border-radius: 9px;
+  background-color: #dad9dc;
+}
+
+.xgplayer .xgplayer-controls .custom-auto-next > .custom-auto-next-switcher > .custom-auto-next-btn {
+  height: 14px;
+  width: 14px;
+  margin: 2px 0 0 2px;
+  border-radius: 50%;
+  background-color: #fff;
+  transition: margin .5s;
 }

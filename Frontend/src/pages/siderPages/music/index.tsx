@@ -4,7 +4,7 @@ import VideoList from '@/components/VideoList'
 const Music: React.FC = () => {
   return (
     <>
-      <VideoList category={'music'} />
+      <VideoList categoryId={1} />
     </>
   )
 }

@@ -7,6 +7,15 @@ import PubPlayer from '@/components/PubPlayer'
 import Mp4Plugin from "xgplayer-mp4"
 import useLatest from '@/hooks/useLatest';
 import customFullscreen from '@/utils/xgPlayerPlugins/customFullscreen';
+import customComment from '@/utils/xgPlayerPlugins/customComment';
+import customLike from '@/utils/xgPlayerPlugins/customLike';
+import customStar from '@/utils/xgPlayerPlugins/customStar';
+import customShare from '@/utils/xgPlayerPlugins/customShare';
+import customAvatar from '@/utils/xgPlayerPlugins/customAvatar';
+import customTitle from '@/utils/xgPlayerPlugins/customTitle';
+import customDetail from '@/utils/xgPlayerPlugins/customDetail';
+import customAutonext from '@/utils/xgPlayerPlugins/customAutonext';
+import { useNavigate } from 'react-router-dom';
 
 const Recommend: React.FC = () => {
   const carouselRef: any = useRef();
@@ -15,9 +24,15 @@ const Recommend: React.FC = () => {
   const [isBegin, setIsBegin] = useState<boolean>(true);
   const [isEnd, _setIsEnd] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const currentIndex: any = useRef();
+  const [isInComment, setIsInComment] = useState<boolean>(false);
+  // const [isAutonext, setIsAutonext] = useState<boolean>(false);
+  const currentIndex: any = useRef(0);
+  const pastIndex: any = useRef(0);
   const playerRefList: any = useRef([]);
   const latestIsFullscreenRef = useLatest(isFullscreen);
+  const latestIsInCommentRef = useLatest(isInComment);
+  const isAutonextRef = useRef(false);
+  const navigate = useNavigate();
 
   // videoQueue.current = useMemo(
   //   () => videoQueue.current.concat(latestMessage),
@@ -30,17 +45,18 @@ const Recommend: React.FC = () => {
         appendVideos(res?.data.data);
       });
     }
-    currentIndex.current = index;
+    playerRefList.current[pastIndex.current].pause();
     playerRefList.current[index].play();
+    currentIndex.current = index;
   }
 
-  const beforeChange = (_oldIndex: number, newIndex: number) => {
+  const beforeChange = (oldIndex: number, newIndex: number) => {
     if (newIndex === 0) {
       setIsBegin(true);
     } else {
       setIsBegin(false);
     }
-    playerRefList.current[_oldIndex].pause();
+    pastIndex.current = oldIndex;
   }
 
   const appendVideos = (data: any) => {
@@ -87,19 +103,21 @@ const Recommend: React.FC = () => {
           dots={false}
           arrows={false}
           vertical={true}
-          draggable={true}
+          verticalSwiping={true}
           infinite={false}
+          speed={300}
           afterChange={afterChange}
           beforeChange={beforeChange}
+          // onSwipe={onSwipe}
           // adaptiveHeight={true}  // 开这个会有显示bug
           ref={carouselRef}
           className={styles.slider}
         >
-          {videoQueue.map((videoData: { [propName: string]: string }, index) => {
+          {videoQueue.map((videoData: { [propName: string]: string | number }, index) => {
             const playerConfig = {
               url: videoData.videoSrc,
               poster: videoData.videoPreview,
-              autoplayMuted: index === 0 ? true : false,
+              // autoplayMuted: index === 0 ? true : false,
               autoplay: index === 0 ? true : false,
               height: '100%',
               width: '100%',
@@ -108,7 +126,8 @@ const Recommend: React.FC = () => {
               fullscreen: false,
               cssFullscreen: false,
               loop: true, // 循环播放
-              plugins: [Mp4Plugin, customFullscreen],
+              closeDelayBlur: true,
+              plugins: [Mp4Plugin, customFullscreen, customShare, customStar, customComment, customLike, customAvatar, customTitle, customDetail, customAutonext],
               mp4plugin: {
                 maxBufferLength: 10,
                 minBufferLength: 5,
@@ -124,6 +143,40 @@ const Recommend: React.FC = () => {
                 isFullscreen: latestIsFullscreenRef,
                 setIsFullscreen: setIsFullscreen,
               },
+              customAvatar: {
+                videoId: videoData.uuid,
+                author: videoData.author,
+                authorAvatarSrc: videoData.authorAvatarSrc,
+              },
+              customLike: {
+                likeNum: videoData.likes,
+                videoId: videoData.uuid,
+                isLiked: videoData.userLike === 1 ? true : false,
+              },
+              customStar: {
+                starNum: videoData.stars,
+                videoId: videoData.uuid,
+                isStarred: videoData.userStar === 1 ? true : false,
+              },
+              customComment: {
+                commentNum: videoData.commentNum,
+                isInComment: latestIsInCommentRef,
+                setIsInComment: setIsInComment,
+              },
+              customTitle: {
+                title: videoData.title,
+                author: videoData.author,
+              },
+              customDetail: {
+                videoId: videoData.uuid,
+                navigate: () => { navigate(`/video/${videoData.uuid}`); },
+              },
+              customAutonext: {
+                currentIndex: currentIndex,
+                isAutonext: isAutonextRef,
+                // setIsAutonext: setIsAutonext,
+                onDownClick: onDownClick,
+              },
               commonStyle: {
                 // 进度条底色
                 progressColor: '776ce9',
@@ -138,7 +191,7 @@ const Recommend: React.FC = () => {
               },
               // preloadTime: 10,  // 预加载固定10s的内容
             };
-            return <PubPlayer key={index} getRef={getRef} playerConfig={playerConfig} isFullscreen={isFullscreen} />
+            return <PubPlayer key={index} getRef={getRef} playerConfig={playerConfig} isFullscreen={isFullscreen} index={index} />
           })}
         </Slider>
         <ul className={styles.videoSwitcher}>

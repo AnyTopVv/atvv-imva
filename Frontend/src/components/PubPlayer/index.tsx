@@ -1,20 +1,49 @@
-import Player from 'xgplayer';
+import Player, { Events } from 'xgplayer';
 import 'xgplayer/dist/index.min.css';
 
 import React, { useEffect, useRef } from 'react'
 
-const PubPlayer: React.FC<any> = (props: { getRef?: any, playerConfig: { [propName: string]: string }, isFullscreen?: boolean }) => {
+const PubPlayer: React.FC<any> = (props: { getRef?: any, playerConfig: { [propName: string]: any }, isFullscreen?: boolean, index?: number }) => {
   const { getRef, playerConfig, isFullscreen } = props;
 
   const playerDomRef = useRef<any>(null);
   const playerInsRef = useRef<any>(null);
   const resizeObserverRef = useRef<any>(null);
 
+  // function isNumber(num: any) {
+  //   return typeof num === 'number' && !isNaN(num)
+  // }
+
   useEffect(() => {
     const player = new Player({
       el: playerDomRef.current,
       ...playerConfig,
     });
+    // 自动播放优化
+    player.on(Events.AUTOPLAY_PREVENTED, () => {
+      player.muted = true;
+      player.play();
+    });
+    player.on(Events.AUTOPLAY_STARTED, () => {
+      player.play();
+    });
+    // // 通过插件实例调用
+    // player.getPlugin('pc').useHooks('videoClick', () => {
+    //   // TODO
+    //   /**
+    //    * 如果返回false，则不执行默认逻辑
+    //    * 如果返回true，则切换暂停/播放
+    //    * */
+    //   console.log("index", index);
+    //   console.log("playerConfig.customAutonext.currentIndex", playerConfig.customAutonext.currentIndex.current);
+
+    //   if (isNumber(index)) {
+    //     if (playerConfig.customAutonext.currentIndex.current !== index) {
+    //       return false;
+    //     }
+    //   }
+    //   return true;
+    // })
     playerInsRef.current = player;
     if (getRef) {
       getRef(playerInsRef.current);
@@ -31,7 +60,10 @@ const PubPlayer: React.FC<any> = (props: { getRef?: any, playerConfig: { [propNa
       })
       resizeObserverRef.current.observe(document.body);
     }
+    // 解决侧边栏不显示的问题
+    player.focus();
     return () => {
+      player.destroy();
       resizeObserverRef.current?.unobserve(document.body);
     }
   }, [])

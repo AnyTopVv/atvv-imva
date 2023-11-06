@@ -10,9 +10,10 @@ import { useAppSelector } from '@/redux/hooks';
 import { selectIsLogin } from '@/redux/features/isLogin/isLoginSlice';
 import VideoPage from '@/pages/VideoPage';
 
-const SiderRouters: FC = (): ReactElement => {
+const SiderRouters: FC<any> = (props: { loginModalRef: any }): ReactElement => {
   const isLogin = useAppSelector(selectIsLogin);
   const lazyRoutes = useLazyRoutes(routesConfig);
+  const { loginModalRef } = props;
 
   return (
     <Suspense fallback={<Loading />}>
@@ -35,7 +36,7 @@ const SiderRouters: FC = (): ReactElement => {
         <Route
           path="/video/*"
           element={
-            <VideoPage />
+            <VideoPage loginModalRef={loginModalRef} />
           }
         />
         <Route path="*" element={<PageNotFound />} />

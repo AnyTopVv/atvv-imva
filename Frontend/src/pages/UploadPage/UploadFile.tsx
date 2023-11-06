@@ -127,7 +127,10 @@ class UploadFile extends Component<any> {
   //提交时清空所有
   finishClear = () => {
     this.setState({
-      fileList: []
+      fileList: [],
+      open: false,
+      file: null,
+      percent: 0,
     })
   }
 

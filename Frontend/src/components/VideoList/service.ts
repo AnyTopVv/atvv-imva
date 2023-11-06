@@ -1,10 +1,10 @@
 import axios from 'axios'
 
-export const getOtherPageVideo = (_params: any) => {
+export const getOtherPageVideo = (params: any) => {
   return axios({
     method: 'get',
     url: '/api/video/getRecommendPageVideo',
-    // params: params,
+    params: params,
   }).then(res => {
     if (res && res.status === 200) {
       return res;
