@@ -27,4 +27,9 @@
     <insert id="insert">
         INSERT INTO user(id,username,password,status,avatar) VALUES(NULL,#{username},#{password},#{status},#{avatar});
     </insert>
+
+
+    <select id="findSampleInfoByUserId" resultMap="User">
+        SELECT username,avatar  FROM `user` u WHERE id = #{id}
+    </select>
 </mapper>

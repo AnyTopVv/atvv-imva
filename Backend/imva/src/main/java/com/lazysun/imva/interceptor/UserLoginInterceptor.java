@@ -1,11 +1,10 @@
 package com.lazysun.imva.interceptor;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.lazysun.imva.constant.ErrorCode;
 import com.lazysun.imva.exception.ImvaServiceException;
-import com.lazysun.imva.moudel.dto.UserContext;
 import com.lazysun.imva.utils.JwtUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,14 +24,12 @@ public class UserLoginInterceptor implements HandlerInterceptor {
         if (Objects.isNull(jwt)){
             throw new ImvaServiceException(ErrorCode.NOT_LOGIN);
         }
-        boolean isEffective;
         try {
-            isEffective = JwtUtil.verifyJwt(jwt);
-        } catch (Exception e) {
-            throw new ImvaServiceException(ErrorCode.JWT_ERROR);
-        }
-        if (!isEffective){
+            JwtUtil.verifyJwt(jwt);
+        } catch (TokenExpiredException e) {
             throw new ImvaServiceException(ErrorCode.JWT_EXPIRE);
+        } catch (Exception e){
+            throw new ImvaServiceException(ErrorCode.JWT_ERROR);
         }
         return true;
     }

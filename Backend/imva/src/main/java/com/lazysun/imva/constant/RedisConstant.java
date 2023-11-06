@@ -30,6 +30,9 @@ public class RedisConstant {
     //视频收藏用户的set 前缀
     public static final String VIDEO_STARS_USER_SET_KEY = "videoStarsUser:";
 
+    // 评论点赞个数的string 前缀
+    public static final String VIDEO_COMMENT_LIKES_NUMBER_KEY = "videoCommentLikesNum:";
+
     /**
      * 返回已上传的切片消息set的key值
      * @param uploadId 上传id
@@ -78,5 +81,9 @@ public class RedisConstant {
      */
     public static String getVideoStarsUserSetKey(Long videoId){
         return VIDEO_STARS_USER_SET_KEY + videoId;
+    }
+
+    public static String getVideoCommentLikesNumberKey(Long commentId){
+        return VIDEO_COMMENT_LIKES_NUMBER_KEY + commentId;
     }
 }

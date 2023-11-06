@@ -58,9 +58,20 @@ public class RecommendVideoVO {
      */
     private Integer stars;
 
+    /**
+     * 用户是否点赞
+     */
     private Integer userLike;
 
+    /**
+     * 用户是否收藏
+     */
     private Integer userStar;
+
+    /**
+     * 评论个数
+     */
+    private Integer commentNum;
 
     public static RecommendVideoVO build(VideoDetailDto video) {
         RecommendVideoVO recommendVideoVO = new RecommendVideoVO();

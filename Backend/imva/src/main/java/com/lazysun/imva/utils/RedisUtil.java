@@ -87,6 +87,28 @@ public class RedisUtil {
         }
     }
 
+    /**
+     * 递增
+     *
+     * @param key 键
+     * @param delta  要增加几
+     * @return
+     */
+    public static long incr(String key, long delta) {
+        return redisTemplate.opsForValue().increment(key, delta);
+    }
+
+    /**
+     * 递减
+     *
+     * @param key   键
+     * @param delta 要减少几
+     * @return
+     */
+    public static long decr(String key, long delta) {
+        return redisTemplate.opsForValue().decrement(key, delta);
+    }
+
     //=======         Set      ===========//
     /**
      * 根据key获取Set中的所有值
