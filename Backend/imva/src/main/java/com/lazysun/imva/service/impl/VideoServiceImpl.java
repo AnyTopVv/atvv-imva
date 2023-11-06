@@ -4,6 +4,7 @@ package com.lazysun.imva.service.impl;
 import com.lazysun.imva.constant.ErrorCode;
 import com.lazysun.imva.constant.FileConstant;
 import com.lazysun.imva.constant.RedisConstant;
+import com.lazysun.imva.dao.CommentDao;
 import com.lazysun.imva.dao.TempUploadFileDao;
 import com.lazysun.imva.dao.VideoDao;
 import com.lazysun.imva.exception.ImvaServiceException;
@@ -36,6 +37,9 @@ public class VideoServiceImpl implements VideoService {
     @Resource
     private TempUploadFileDao tempUploadFileDao;
 
+    @Resource
+    private CommentDao commentDao;
+
 
     @Override
     public List<RecommendVideoVO> getRecommendVideo(Long categoryId, int count) {
@@ -62,6 +66,7 @@ public class VideoServiceImpl implements VideoService {
         List<RecommendVideoVO> list = new ArrayList<>();
         for (VideoDetailDto video : videos) {
             RecommendVideoVO recommendVideoVO = RecommendVideoVO.build(video);
+            recommendVideoVO.setCommentNum(commentDao.pageListCount(video.getId()));
             recommendVideoVO.setLikes((int) RedisUtil.sGetSetSize(RedisConstant.getVideoLikesUserSetKey(video.getId())));
             recommendVideoVO.setStars((int) RedisUtil.sGetSetSize(RedisConstant.getVideoStarsUserSetKey(video.getId())));
             //TODO 头像和和缩略图不必放在私有空间
@@ -117,6 +122,7 @@ public class VideoServiceImpl implements VideoService {
         }
         VideoDetailDto video = videoDetailDtoList.get(0);
         RecommendVideoVO videoVO = RecommendVideoVO.build(video);
+        videoVO.setCommentNum(commentDao.pageListCount(video.getId()));
         videoVO.setLikes((int) RedisUtil.sGetSetSize(RedisConstant.getVideoLikesUserSetKey(video.getId())));
         videoVO.setStars((int) RedisUtil.sGetSetSize(RedisConstant.getVideoStarsUserSetKey(video.getId())));
         if (Objects.nonNull(userId)) {

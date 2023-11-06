@@ -31,7 +31,7 @@ public class CommentController {
         return ResponseVO.success(commentService.listCommentPage(videoId,pageNumber));
     }
 
-    @PostMapping("/operate")
+    @PostMapping("/like")
     public ResponseVO<Void> commentLikesOperate(@RequestBody VideoCommentLikesDto videoCommentLikesDto){
         commentService.commentLikesOperate(videoCommentLikesDto);
         return ResponseVO.success();

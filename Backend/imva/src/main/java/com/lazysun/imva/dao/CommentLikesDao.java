@@ -26,12 +26,6 @@ public interface CommentLikesDao {
      */
     int delete(@Param("userId") Long userId, @Param("commentId") Long commentId);
 
-    /**
-     * 统计视频的点赞数
-     * @param commentId 视频id
-     * @return 点赞数
-     */
-    int count(@Param("commentId") Long commentId);
 
     /**
      * 判断用户是否已点赞

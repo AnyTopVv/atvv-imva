@@ -19,6 +19,8 @@ class SecureUtilTest {
 
     @Test
     public void test(){
+        boolean b = JwtUtil.verifyJwt("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2OTkyNzA0NTQsInVzZXJJZCI6M30.B7-D0LiiqxZWt8RXy6MQznb7WPl3jHEmUwOj-cgDcPU");
+        System.out.println(b);
     }
 
 

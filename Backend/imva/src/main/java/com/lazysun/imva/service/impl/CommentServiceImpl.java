@@ -65,7 +65,8 @@ public class CommentServiceImpl implements CommentService {
         for (Comment comment :
                 comments) {
             VideoCommentVo.UserComment userComment = VideoCommentVo.UserComment.build(comment);
-            userComment.setLikes(Integer.valueOf(RedisUtil.get(RedisConstant.getVideoCommentLikesNumberKey(comment.getId())).toString()));
+            Object likesNum = RedisUtil.get(RedisConstant.getVideoCommentLikesNumberKey(comment.getId()));
+            userComment.setLikes(Objects.isNull(likesNum) ? 0 : Integer.parseInt(likesNum.toString()));
             if (Objects.nonNull(commentLikesDao.isLiked(userId, comment.getId()))) {
                 userComment.setUserLike(1);
             } else {
@@ -84,11 +85,11 @@ public class CommentServiceImpl implements CommentService {
     public void commentLikesOperate(VideoCommentLikesDto videoCommentLikesDto) {
         Long userId = UserContext.getUserId();
         if (VideoOperationEnum.VIDEO_LIKE.getCode().equals(videoCommentLikesDto.getLike())) {
-            CommentLikes commentLikes = new CommentLikes(videoCommentLikesDto.getCommentId(),userId);
-            RedisUtil.incr(RedisConstant.getVideoCommentLikesNumberKey(videoCommentLikesDto.getCommentId()),1);
+            CommentLikes commentLikes = new CommentLikes(videoCommentLikesDto.getCommentId(), userId);
+            RedisUtil.incr(RedisConstant.getVideoCommentLikesNumberKey(videoCommentLikesDto.getCommentId()), 1);
             commentLikesDao.insert(commentLikes);
         } else if (VideoOperationEnum.VIDEO_UN_LIKE.getCode().equals(videoCommentLikesDto.getLike())) {
-            RedisUtil.decr(RedisConstant.getVideoCommentLikesNumberKey(videoCommentLikesDto.getCommentId()),1);
+            RedisUtil.decr(RedisConstant.getVideoCommentLikesNumberKey(videoCommentLikesDto.getCommentId()), 1);
             commentLikesDao.delete(userId, videoCommentLikesDto.getCommentId());
         }
     }
