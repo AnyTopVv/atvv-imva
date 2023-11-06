@@ -8,14 +8,18 @@ import { useNavigate } from 'react-router-dom';
 
 const { Meta } = Card;
 
-const VideoList: React.FC<any> = (props: { category: string }) => {
-  const { category } = props;
+const VideoList: React.FC<any> = (props: { categoryId: string }) => {
+  const { categoryId } = props;
   const containerRef = useRef<any>(null) // 创建一个 ref 对象，用于引用组件的容器元素
   const [data, setData] = useState([]); // 当前已加载的数据
   const [isLoading, setIsLoading] = useState(true); // 当前是否正在加载数据
   const [hasMore, setHasMore] = useState(true); // 当前是否还有更多数据可供加载
   const latestDataRef = useLatest(data);
   const navigate = useNavigate();
+  const reqData = {
+    categoryId: categoryId,
+    count: 10,
+  }
 
   const appendVideos = (res: any) => {
     setData(latestDataRef.current.concat(res));
@@ -32,7 +36,7 @@ const VideoList: React.FC<any> = (props: { category: string }) => {
       // 判断是否需要加载更多数据，这里的阈值为 50px
       if (scrollBottom < 100 && !isLoading && hasMore) {
         setIsLoading(true);
-        getOtherPageVideo(category).then((res: any) => {
+        getOtherPageVideo(reqData).then((res: any) => {
           appendVideos(res?.data.data);
         });
       }
@@ -44,11 +48,11 @@ const VideoList: React.FC<any> = (props: { category: string }) => {
 
   useEffect(() => {
     setIsLoading(true);
-    getOtherPageVideo(category).then((res: any) => {
+    getOtherPageVideo(reqData).then((res: any) => {
       appendVideos(res?.data.data);
       setIsLoading(true);
       const timeout = setTimeout(() => {
-        getOtherPageVideo(category).then((res: any) => {
+        getOtherPageVideo(reqData).then((res: any) => {
           appendVideos(res?.data.data);
         });
         clearTimeout(timeout);
@@ -74,12 +78,21 @@ const VideoList: React.FC<any> = (props: { category: string }) => {
             media: [640, 768, 1024, 1280, 1400],
           }}
           render={(item: any, index) => (
-            <div onClick={() => { navigate(`/video/${item.uuid}`) }}>
+            <div key={index} onClick={() => { navigate(`/video/${item.uuid}`) }}>
               <Card
                 key={index}
                 hoverable
                 size="small"
-                cover={<Image src={item.videoPreview} preview={false} height={200} />}
+                cover={<Image
+                  src={item.videoPreview}
+                  preview={false}
+                  height={200}
+                // placeholder={
+                //   <Skeleton.Node style={{ height: '200px' }} active={true}>
+                //     <YoutubeFilled style={{ fontSize: 40, color: '#bfbfbf' }} />
+                //   </Skeleton.Node>
+                // }
+                />}
                 style={{ width: '100%', height: 'auto' }}
               >
                 <Meta title={item.title} description={item.author} />

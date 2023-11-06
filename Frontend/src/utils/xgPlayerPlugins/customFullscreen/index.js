@@ -77,16 +77,16 @@ export default class customFullscreen extends Plugin {
   }
 
   destroy() {
-    this.unbind('.icon', 'click', this.onIconClick)
+    this.unbind('.custom-fullscreen-icon', 'click', this.onIconClick)
     this.unbind('click', this.onClick)
     this.icon = null
     // 播放器销毁的时候一些逻辑
     //移除监听
-    EventBus.removeEventListener('clickCustomFullscreen', this.reSearchCollectFile)
+    EventBus.removeEventListener('clickCustomFullscreen', this.changeIcons)
   }
 
   render() {
-    return `<div class="custom-fullscreen-plugin">
+    return `<div class="custom-fullscreen-plugin" style="margin-right: 16px;" >
     <div class="custom-fullscreen-icon">
       ${this.playerConfig.customFullscreen.isFullscreen.current === true ?
       `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="40" viewBox="2 -4 28 40">\n  <path fill="#fff" transform="scale(0.0320625 0.0320625)" d="M682 342h128v84h-212v-212h84v128zM598 810v-212h212v84h-128v128h-84zM342 342v-128h84v212h-212v-84h128zM214 682v-84h212v212h-84v-128h-128z"></path>\n</svg>\n` :

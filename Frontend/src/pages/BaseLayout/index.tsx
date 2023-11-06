@@ -1,4 +1,4 @@
-import { Button, Layout, Menu, Image, Avatar, Popover } from 'antd';
+import { Button, Layout, Menu, Image, Avatar, Popover, Switch } from 'antd';
 import SiderRouters from '@/routes/SiderRoutes';
 import { meunItems } from '@/routes/routesConfig';
 import { useRef, type FC, type ReactElement } from 'react';
@@ -9,6 +9,7 @@ import LoginModal from '@/components/LoginModal';
 import { useAppSelector } from '@/redux/hooks';
 import { selectIsLogin } from '@/redux/features/isLogin/isLoginSlice';
 import { selectUserAvatar, selectUsername } from '@/redux/features/user/userSlice';
+import { SunIcon, MoonIcon } from '@/assets/svgs'
 
 const { Header, Sider, Content } = Layout;
 
@@ -17,7 +18,7 @@ const BaseLayout: FC = (): ReactElement => {
   const username = useAppSelector(selectUsername);
   const avatar = useAppSelector(selectUserAvatar);
   const navigate = useNavigate();
-  const LoginModalRef: any = useRef();
+  const loginModalRef: any = useRef();
 
   const exitLogin = () => {
     localStorage.removeItem("access_token");
@@ -84,15 +85,17 @@ const BaseLayout: FC = (): ReactElement => {
                       <Avatar style={{ backgroundColor: '#776ce9', verticalAlign: 'middle' }} size={52} >{username}</Avatar>
                     </div>
                   </Popover> :
-                <Button
-                  type='primary'
-                  icon={<UserOutlined />}
-                  onClick={() => {
-                    LoginModalRef.current.open();
-                  }}
-                >
-                  登录
-                </Button>
+                <div style={{ height: '52px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <Button
+                    type='primary'
+                    icon={<UserOutlined />}
+                    onClick={() => {
+                      loginModalRef.current.open();
+                    }}
+                  >
+                    登录
+                  </Button>
+                </div>
               }
               {
                 isLogin ?
@@ -102,6 +105,13 @@ const BaseLayout: FC = (): ReactElement => {
                   </Button> :
                   null
               }
+              <div style={{ height: '52px', display: 'flex', flexDirection: 'column', justifyContent: 'center', marginRight: "10px" }}>
+                <Switch
+                  checkedChildren={<MoonIcon />}
+                  unCheckedChildren={<SunIcon />}
+                  defaultChecked
+                />
+              </div>
             </div>
           </Header>
           <Content
@@ -112,11 +122,11 @@ const BaseLayout: FC = (): ReactElement => {
               backgroundColor: '#f4f1fc',
             }}
           >
-            <SiderRouters />
+            <SiderRouters loginModalRef={loginModalRef} />
           </Content>
         </Layout>
       </Layout >
-      <LoginModal modalRef={LoginModalRef} />
+      <LoginModal modalRef={loginModalRef} />
     </>
   )
 }
