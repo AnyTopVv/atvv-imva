@@ -62,12 +62,14 @@ public class VideoServiceImpl implements VideoService {
         List<RecommendVideoVO> list = new ArrayList<>();
         for (VideoDetailDto video : videos) {
             RecommendVideoVO recommendVideoVO = RecommendVideoVO.build(video);
+            recommendVideoVO.setLikes((int) RedisUtil.sGetSetSize(RedisConstant.getVideoLikesUserSetKey(video.getId())));
+            recommendVideoVO.setStars((int) RedisUtil.sGetSetSize(RedisConstant.getVideoStarsUserSetKey(video.getId())));
             //TODO 头像和和缩略图不必放在私有空间
-            if (Objects.nonNull(userId)){
-                if (RedisUtil.setHasKey(RedisConstant.getVideoLikesUserSetKey(video.getId()),userId)){
+            if (Objects.nonNull(userId)) {
+                if (RedisUtil.setHasKey(RedisConstant.getVideoLikesUserSetKey(video.getId()), userId)) {
                     recommendVideoVO.setUserLike(1);
                 }
-                if (RedisUtil.setHasKey(RedisConstant.getVideoStarsUserSetKey(video.getId()),userId)){
+                if (RedisUtil.setHasKey(RedisConstant.getVideoStarsUserSetKey(video.getId()), userId)) {
                     recommendVideoVO.setUserStar(1);
                 }
             }
@@ -115,11 +117,13 @@ public class VideoServiceImpl implements VideoService {
         }
         VideoDetailDto video = videoDetailDtoList.get(0);
         RecommendVideoVO videoVO = RecommendVideoVO.build(video);
-        if (Objects.nonNull(userId)){
-            if (RedisUtil.setHasKey(RedisConstant.getVideoLikesUserSetKey(video.getId()),userId)){
+        videoVO.setLikes((int) RedisUtil.sGetSetSize(RedisConstant.getVideoLikesUserSetKey(video.getId())));
+        videoVO.setStars((int) RedisUtil.sGetSetSize(RedisConstant.getVideoStarsUserSetKey(video.getId())));
+        if (Objects.nonNull(userId)) {
+            if (RedisUtil.setHasKey(RedisConstant.getVideoLikesUserSetKey(video.getId()), userId)) {
                 videoVO.setUserLike(1);
             }
-            if (RedisUtil.setHasKey(RedisConstant.getVideoStarsUserSetKey(video.getId()),userId)){
+            if (RedisUtil.setHasKey(RedisConstant.getVideoStarsUserSetKey(video.getId()), userId)) {
                 videoVO.setUserStar(1);
             }
         }
