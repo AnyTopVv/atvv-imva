@@ -1,6 +1,7 @@
 package com.lazysun.imva.moudel.po;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 评论点赞
@@ -8,6 +9,7 @@ import lombok.Data;
  * @date: 2023/11/5 13:43
  */
 @Data
+@NoArgsConstructor
 public class CommentLikes {
     /**
      * 主键
@@ -23,4 +25,9 @@ public class CommentLikes {
      * 用户id
      */
     private Long userId;
+
+    public CommentLikes(Long commentId, Long userId) {
+        this.commentId = commentId;
+        this.userId = userId;
+    }
 }

@@ -33,4 +33,12 @@ public interface CommentLikesDao {
      */
     int count(@Param("commentId") Long commentId);
 
+    /**
+     * 判断用户是否已点赞
+     * @param userId 用户id
+     * @param commentId 评论id
+     * @return 主键
+     */
+    Integer isLiked(@Param("userId") Long userId, @Param("commentId") Long commentId);
+
 }

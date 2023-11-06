@@ -24,4 +24,6 @@ public interface UserDao {
      * @return
      */
     boolean insert(User user);
+
+    User findSampleInfoByUserId(@Param("id") Long id);
 }

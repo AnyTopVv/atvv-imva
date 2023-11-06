@@ -4,18 +4,44 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lazysun.imva.dao.CommentDao">
 
-    <resultMap id="User" type="com.lazysun.imva.moudel.po.Comment" >
-        <result column="id" property="id" />
-        <result column="video_id" property="videoId" />
-        <result column="user_id" property="userId" />
-        <result column="create_time" property="createTime" />
-        <result column="comment_content" property="commentContent" />
-        <result column="likes" property="likes" />
-        <result column="enable" property="enable" />
+    <resultMap id="Comment" type="com.lazysun.imva.moudel.po.Comment">
+        <result column="id" property="id"/>
+        <result column="video_id" property="videoId"/>
+        <result column="user_id" property="userId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="comment_content" property="commentContent"/>
+        <result column="likes" property="likes"/>
+        <result column="enable" property="enable"/>
     </resultMap>
+
+    <sql id="Base_Column_List">
+        c.id,
+        c.video_id,
+        c.user_id,
+        c.create_time,
+        c.comment_content,
+        c.likes
+    </sql>
 
     <insert id="insert">
         INSERT INTO comment (video_id, user_id, create_time, comment_content, likes, enable)
         VALUES (#{videoId}, #{userId}, #{createTime}, #{commentContent}, #{likes}, 0);
     </insert>
+
+
+    <select id="pageList" resultMap="Comment">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM comment c
+        WHERE c.video_id = #{videoId}
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM comment
+        WHERE video_id = #{videoId}
+    </select>
+
+
 </mapper>

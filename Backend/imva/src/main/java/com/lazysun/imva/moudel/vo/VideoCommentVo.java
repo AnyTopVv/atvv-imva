@@ -2,6 +2,7 @@ package com.lazysun.imva.moudel.vo;
 
 import com.lazysun.imva.moudel.po.Comment;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @date: 2023/11/6 16:16
  */
 @Data
+@NoArgsConstructor
 public class VideoCommentVo {
 
     /**
@@ -23,6 +25,7 @@ public class VideoCommentVo {
      */
     private Integer totalNumber;
 
+
     /**
      * 当前页数
      */
@@ -31,10 +34,17 @@ public class VideoCommentVo {
     /**
      * 用户评论
      */
-    private List<UserContent> userComments;
+    private List<UserComment> userComments;
+
+
+    public VideoCommentVo(Long videoId, Integer totalNumber, Integer pageNumber) {
+        this.videoId = videoId;
+        this.totalNumber = totalNumber;
+        this.pageNumber = pageNumber;
+    }
 
     @Data
-    public static class UserContent{
+    public static class UserComment{
 
         private Long commentId;
 
@@ -52,8 +62,8 @@ public class VideoCommentVo {
 
         private Integer userLike;
 
-        public static UserContent build(Comment comment){
-            UserContent userContent = new UserContent();
+        public static UserComment build(Comment comment){
+            UserComment userContent = new UserComment();
             userContent.setUserId(comment.getUserId());
             userContent.setCommentId(comment.getId());
             userContent.setCreateTime(comment.getCreateTime().getTime());
