@@ -24,7 +24,7 @@ jobs:
           base: ${{ github.ref }}
           filters: |
             backend:
-              - "Backend/*"
+              - "Backend/**"
 
             frontend:
-              - "Frontend/*"
+              - "Frontend/**"

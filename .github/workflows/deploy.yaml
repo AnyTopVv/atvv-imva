@@ -15,6 +15,59 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: install jdk8
+        uses: actions/setup-java@v2
+        with:
+          java-version: 8
+          distribution: 'adopt'
+
+      - name: Dependencies Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build with Maven
+        run: |
+          cd Backend/imva
+          mvn clean package
+          mv target/imva-1.0.jar target/imva.jar
+
+      - name: ZeroTier
+        uses: zerotier/github-action@v1.0.1
+        with:
+          network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
+          auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+
+      - name: wait prepare
+        shell: bash
+        run: |
+          count=10
+          while ! ping -c 1 ${{ secrets.HOST }} ; do
+            echo "waiting..." ;
+            sleep 10 ;
+            let count=count-1
+          done
+          echo "ping success"
+
+      - name: deploy
+        uses: easingthemes/ssh-deploy@v4.1.0
+        with:
+          REMOTE_HOST: ${{ secrets.HOST }} # 远程服务器地址，从 secrets 中读取
+          REMOTE_USER: ${{ secrets.NAME }} # 远程服务器用户名，从 secrets 中读取
+          REMOTE_PORT: ${{ secrets.PORT }} # 远程服务器端口号，从 secrets 中读取
+          SSH_PRIVATE_KEY: ${{ secrets.KEY }} # SSH 密钥，从 secrets 中读取
+          SOURCE: "./Backend/imva/target/imva.jar" # 要拷贝的文件路径
+          TARGET: "/tmp/1024/backend/imva.jar"
+          SCRIPT_AFTER: |
+            cd ~/atvv-imva/backend
+            sh stop.sh
+            rm -f imva.jar
+            mv /tmp/1024/backend/imva.jar .
+            sh start.sh
+
 
 
   deploy-frontend:
@@ -49,6 +102,17 @@ jobs:
         with:
           network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
           auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+
+      - name: wait prepare
+        shell: bash
+        run: |
+          count=10
+          while ! ping -c 1 ${{ secrets.HOST }} ; do
+            echo "waiting..." ;
+            sleep 10 ;
+            let count=count-1
+          done
+          echo "ping success"
 
       - name: deploy
         uses: easingthemes/ssh-deploy@v4.1.0
