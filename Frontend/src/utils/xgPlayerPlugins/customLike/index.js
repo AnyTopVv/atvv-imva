@@ -2,7 +2,7 @@ import {
   Plugin
 } from 'xgplayer'
 import {
-  likeVideo,
+  likeVideo
 } from '@/pages/videoPage/service';
 
 const {
