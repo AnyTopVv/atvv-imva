@@ -35,6 +35,8 @@ public class FileConstant {
      */
     public static final String PREVIEW_FILE_SUFFIX = ".jpg";
 
+    public static final String DEFAULT_PREVIEW_FILE = "videos/previews/defalut-preview.jpg";
+
     /**
      * 缩略图文件名
      * @param fileName 文件名

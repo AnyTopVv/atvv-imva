@@ -1,0 +1,63 @@
+name: compliance
+
+on:
+  pull_request:
+
+jobs:
+  files-changed:
+    uses: ./.github/workflows/files-changed.yaml
+
+  deploy-backend:
+    if: needs.files-changed.outputs.backend == 'true'
+    needs: files-changed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install jdk8
+        uses: actions/setup-java@v2
+        with:
+          java-version: 8
+          distribution: 'adopt'
+
+      - name: Dependencies Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build with Maven
+        run: |
+          cd Backend/imva
+          mvn clean package
+
+
+
+  deploy-frontend:
+    if: needs.files-changed.outputs.frontend == 'true'
+    needs: files-changed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'pnpm'
+          cache-dependency-path: ./Frontend/package.json
+
+
+      - name: install and build
+        run: |
+          cd Frontend
+          pnpm install
+          npm run build

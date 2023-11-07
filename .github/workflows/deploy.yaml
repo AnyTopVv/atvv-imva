@@ -95,7 +95,7 @@ jobs:
         run: |
           cd Frontend
           pnpm install
-          pnpm run build
+          npm run build
 
       - name: ZeroTier
         uses: zerotier/github-action@v1.0.1

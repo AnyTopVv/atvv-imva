@@ -115,6 +115,7 @@ const BaseLayout: FC = (): ReactElement => {
             </div>
           </Header>
           <Content
+            id='atvv-imva-content'
             style={{
               padding: '10px',
               overflow: 'auto',

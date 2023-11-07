@@ -1,9 +1,7 @@
 import {
   Plugin
 } from 'xgplayer'
-import {
-  starVideo
-} from '@/pages/videoPage/service';
+import { starVideo } from '../../../pages/videoPage/service';
 
 const {
   POSITIONS
