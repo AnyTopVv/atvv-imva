@@ -34,5 +34,6 @@
 
 ## 演示示例
 
+[演示视频](assets/演示视频.mp4)
 
-
+在线演示视频：[演示视频.mp4](http://testqiniu.lazysun.me/演示视频.mp4)
