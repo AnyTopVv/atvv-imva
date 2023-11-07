@@ -1,8 +1,8 @@
-import { Avatar, message } from 'antd';
-import { useState, type FC, type ReactElement, useEffect } from 'react';
+import { Avatar, Space, message } from 'antd';
+import React, { useState, type FC, type ReactElement, useEffect, useRef } from 'react';
 import PubPlayer from '@/components/PubPlayer'
 import Mp4Plugin from "xgplayer-mp4"
-import { getVideoDetail, likeVideo, starVideo } from './service';
+import { addComment, getVideoComments, getVideoDetail, likeComment, likeVideo, starVideo } from './service';
 import useCallbackState from '@/hooks/useCallbackState';
 import Loading from '@/components/Loading';
 import { HeartFilled, StarFilled } from '@ant-design/icons';
@@ -10,6 +10,8 @@ import { useLocation } from 'react-router-dom';
 import PageNotFound from '../PageNotFound';
 import { useAppSelector } from '@/redux/hooks';
 import { selectIsLogin } from '@/redux/features/isLogin/isLoginSlice';
+import CommentArea from '@/components/CommentArea';
+import { CommentIcon } from '@/assets/svgs';
 
 const VideoPage: FC<any> = (props: { loginModalRef: any }): ReactElement => {
   const isLogin = useAppSelector(selectIsLogin);
@@ -21,10 +23,75 @@ const VideoPage: FC<any> = (props: { loginModalRef: any }): ReactElement => {
   const { loginModalRef } = props;
   const [isStarred, setIsStarred] = useState<boolean>(false);
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  // const [commentData, setCommentData] = useState<any>();
+  const [isCommentLoading, setIsCommentLoading] = useState(false);
+  const [commentData, setCommentData] = useState<any>([]);
+  const loadedCommentPage = useRef<number>(1);
+  const [hasMore, setHasMore] = useState(true);
 
   function isNumber(num: any) {
     return typeof num === 'number' && !isNaN(num)
+  }
+
+  const IconText = ({ icon, text, id, isLiked }: { icon: React.FC; text: number; id: number, isLiked: boolean }) => {
+    const [isLikedCurrent, setIsLikedCurrent] = useState(isLiked);
+    const [likeNum, setLikeNum] = useState(text);
+
+    const onCommentLikeClick = () => {
+      const reqData = {
+        commentId: id,
+        like: isLikedCurrent ? 2 : 1,
+      }
+      likeComment(reqData).then((_res: any) => {
+        setIsLikedCurrent(isLikedCurrent ? false : true);
+        setLikeNum(isLikedCurrent ? likeNum - 1 : likeNum + 1);
+      })
+    }
+
+    return <Space style={{ cursor: 'pointer', color: isLikedCurrent ? '#fe2c55' : '#474747' }} onClick={onCommentLikeClick} >
+      {React.createElement(icon)}
+      {likeNum}
+    </Space>
+  };
+
+  const loadMoreData = () => {
+    if (isCommentLoading) {
+      return;
+    }
+    setIsCommentLoading(true);
+    const commentReqData = {
+      videoId: secondaryPathKey,
+      pageNumber: loadedCommentPage.current,
+    };
+    getVideoComments(commentReqData).then((res: any) => {
+      if (res.data.code === 0) {
+        if (res.data.data.userComments.length === 0) {
+          setHasMore(false);
+          return
+        }
+        setCommentData(commentData.concat(res.data.data.userComments));
+        loadedCommentPage.current++;
+        setIsCommentLoading(false);
+      } else {
+        setHasMore(false);
+      }
+    });
+  };
+
+  const onSearch = (value: string) => {
+    if (value !== undefined && value !== "") {
+      const reqData = {
+        videoId: videoData.uuid,
+        commentContent: value,
+      }
+      addComment(reqData).then((res: any) => {
+        if (res.data.code === 0) {
+          setCommentData([res.data.data, ...commentData]);
+          message.success("评论发布成功！")
+        } else {
+          message.error(res.data.msg || "评论发布失败！请稍后重试！")
+        }
+      })
+    }
   }
 
   const onLikeClick = () => {
@@ -71,10 +138,10 @@ const VideoPage: FC<any> = (props: { loginModalRef: any }): ReactElement => {
 
   useEffect(() => {
     if (isNumber(secondaryPathKey)) {
-      const reqData = {
+      const videoReqData = {
         videoId: secondaryPathKey,
       };
-      getVideoDetail(reqData).then((res: any) => {
+      getVideoDetail(videoReqData).then((res: any) => {
         setVideoData(res.data.data);
         setIsLiked(res.data.data.userLike === 1 ? true : false);
         setIsStarred(res.data.data.userStar === 1 ? true : false);
@@ -122,8 +189,8 @@ const VideoPage: FC<any> = (props: { loginModalRef: any }): ReactElement => {
         }, () => {
           setIsInit(true);
         })
-      })
-      // getVideoComments()
+      });
+      loadMoreData();
     }
   }, [])
 
@@ -142,15 +209,18 @@ const VideoPage: FC<any> = (props: { loginModalRef: any }): ReactElement => {
                 </div>
               }
               <h1 style={{ lineHeight: '40px', fontSize: '18px', fontWeight: '500' }} >{videoData?.title}</h1>
-              <div style={{ fontSize: '24px' }} >
+              <div style={{ fontSize: '24px', marginBottom: '20px' }} >
                 <span style={{ marginRight: '20px', cursor: 'pointer', color: isLiked ? '#fe2c55' : '#474747', transition: 'color .3s' }} onClick={onLikeClick} >
                   <HeartFilled /> <span>{videoData?.likes}</span>
                 </span>
-                <span style={{ cursor: 'pointer', color: isStarred ? '#ffb802' : '#474747', transition: 'color .3s' }} onClick={onStarClick} >
+                <span style={{ marginRight: '20px', cursor: 'pointer', color: isStarred ? '#ffb802' : '#474747', transition: 'color .3s' }} onClick={onStarClick} >
                   <StarFilled /> <span>{videoData?.stars}</span>
                 </span>
+                <span style={{ marginRight: '20px', cursor: 'pointer', color: '#474747', transition: 'color .3s' }} >
+                  <CommentIcon /> <span>{videoData?.commentNum}</span>
+                </span>
               </div>
-              <div>全部评论</div>
+              <CommentArea IconText={IconText} hasMore={hasMore} onSearch={onSearch} loadMoreData={loadMoreData} commentData={commentData} />
             </div>
             <div style={{ flex: '2' }}>
               <div style={{ padding: '20px' }} >

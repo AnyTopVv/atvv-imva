@@ -16,6 +16,7 @@ import customTitle from '@/utils/xgPlayerPlugins/customTitle';
 import customDetail from '@/utils/xgPlayerPlugins/customDetail';
 import customAutonext from '@/utils/xgPlayerPlugins/customAutonext';
 import { useNavigate } from 'react-router-dom';
+import CommentAreaForSlide from '@/components/CommentAreaForSlide';
 
 const Recommend: React.FC = () => {
   const carouselRef: any = useRef();
@@ -33,7 +34,20 @@ const Recommend: React.FC = () => {
   const latestIsInCommentRef = useLatest(isInComment);
   const isAutonextRef = useRef(false);
   const navigate = useNavigate();
+  const commentRefList: any = useRef([]);
 
+  // 评论
+  function getCommentRef(ins: any) {
+    commentRefList.current.push(ins);
+  }
+
+  useEffect(() => {
+    if (isInComment && commentRefList.current[currentIndex.current].loadedCommentPage.current === 1) {
+      commentRefList.current[currentIndex.current].loadMoreData();
+    }
+  }, [isInComment])
+
+  // 轮播图
   // videoQueue.current = useMemo(
   //   () => videoQueue.current.concat(latestMessage),
   //   [latestMessage],
@@ -47,6 +61,9 @@ const Recommend: React.FC = () => {
     }
     playerRefList.current[pastIndex.current].pause();
     playerRefList.current[index].play();
+    if (isInComment && commentRefList.current[index].loadedCommentPage.current === 1) {
+      commentRefList.current[index].loadMoreData();
+    }
     currentIndex.current = index;
   }
 
@@ -57,6 +74,7 @@ const Recommend: React.FC = () => {
       setIsBegin(false);
     }
     pastIndex.current = oldIndex;
+
   }
 
   const appendVideos = (data: any) => {
@@ -191,7 +209,10 @@ const Recommend: React.FC = () => {
               },
               // preloadTime: 10,  // 预加载固定10s的内容
             };
-            return <PubPlayer key={index} getRef={getRef} playerConfig={playerConfig} isFullscreen={isFullscreen} index={index} />
+            return <div key={index} style={{ display: 'flex' }} >
+              <PubPlayer getRef={getRef} playerConfig={playerConfig} isFullscreen={isFullscreen} index={index} isInComment={isInComment} />
+              <CommentAreaForSlide getCommentRef={getCommentRef} isInComment={isInComment} videoId={videoData.uuid} />
+            </div>
           })}
         </Slider>
         <ul className={styles.videoSwitcher}>
