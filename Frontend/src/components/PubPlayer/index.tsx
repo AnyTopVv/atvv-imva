@@ -3,8 +3,8 @@ import 'xgplayer/dist/index.min.css';
 
 import React, { useEffect, useRef } from 'react'
 
-const PubPlayer: React.FC<any> = (props: { getRef?: any, playerConfig: { [propName: string]: any }, isFullscreen?: boolean, index?: number }) => {
-  const { getRef, playerConfig, isFullscreen } = props;
+const PubPlayer: React.FC<any> = (props: { getRef?: any, playerConfig: { [propName: string]: any }, isFullscreen?: boolean, index?: number, isInComment?: boolean }) => {
+  const { getRef, playerConfig, isFullscreen, isInComment } = props;
 
   const playerDomRef = useRef<any>(null);
   const playerInsRef = useRef<any>(null);
@@ -44,10 +44,12 @@ const PubPlayer: React.FC<any> = (props: { getRef?: any, playerConfig: { [propNa
     //   }
     //   return true;
     // })
+
     playerInsRef.current = player;
     if (getRef) {
       getRef(playerInsRef.current);
     }
+    // 自定义全屏resize
     if (isFullscreen === true) {
       resizeObserverRef.current = new ResizeObserver(() => {
         playerDomRef.current.style.height = document.body.clientHeight + 'px';
@@ -59,6 +61,10 @@ const PubPlayer: React.FC<any> = (props: { getRef?: any, playerConfig: { [propNa
         playerDomRef.current.style.height = (content.clientHeight - 20) + 'px';
       })
       resizeObserverRef.current.observe(document.body);
+    }
+    // 评论区展开resize
+    if (isInComment === true) {
+      playerDomRef.current.style.width = '70%'
     }
     // 解决侧边栏不显示的问题
     player.focus();
@@ -86,6 +92,14 @@ const PubPlayer: React.FC<any> = (props: { getRef?: any, playerConfig: { [propNa
       resizeObserverRef.current.observe(document.body);
     }
   }, [isFullscreen])
+
+  useEffect(() => {
+    if (isInComment === true) {
+      playerDomRef.current.style.width = '70%';
+    } else if (isInComment === false) {
+      playerDomRef.current.style.width = '100%';
+    }
+  }, [isInComment])
 
   // // 对外暴露open方法，外部组件可通过modalRef.open(callback)来展示模态框
   // useImperativeHandle(modalRef, () => {	// 这里传入的ref是通过props传进来的

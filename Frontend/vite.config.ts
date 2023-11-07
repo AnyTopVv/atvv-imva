@@ -21,7 +21,7 @@ export default defineConfig({
       },
     },
   },
-  base: './',
+  // base: './',
   css: {
     modules: {
       localsConvention: 'camelCaseOnly',  // 配置css module驼峰式转换
