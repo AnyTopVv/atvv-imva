@@ -23,7 +23,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 "/user/register",               //注册
                 "/video/getRecommendPageVideo",
                 "/video/detail",
-                "/category/getAll"
+                "/category/getAll",
+                "/video/comment/list"
         );
         registry.addInterceptor(new UserInfoInterceptor()).
                 addPathPatterns("/**");
