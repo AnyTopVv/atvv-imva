@@ -51,6 +51,8 @@ mysql:8.0.28 \
 --collation-server=utf8mb4_general_ci 
 ```
 
+导入sql语句 `Backend/imva/src/main/resources/imva.sql`
+
 ### 3. redis
 
 docker安装redis
