@@ -97,10 +97,15 @@ public class VideoServiceImpl implements VideoService {
         try {
             //将文件从临时文件夹移动至视频文件夹下
             QiNiuUtil.moveFile(tempVideoPath, videoPath);
-            QiNiuUtil.moveFile(tempPreviewPath, previewPath);
         } catch (QiniuException e) {
             e.printStackTrace();
             throw new ImvaServiceException(ErrorCode.ERROR);
+        }
+        try {
+            QiNiuUtil.moveFile(tempPreviewPath, previewPath);
+        } catch (QiniuException e) {
+            e.printStackTrace();
+            previewPath = FileConstant.DEFAULT_PREVIEW_FILE;
         }
         Video video = new Video();
         video.setVideoName(upLoadVideoDto.getVideoName());
