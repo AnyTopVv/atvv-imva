@@ -5,6 +5,7 @@ import {
   likeVideo
 } from '../../../pages/videoPage/service';
 
+
 const {
   POSITIONS
 } = Plugin

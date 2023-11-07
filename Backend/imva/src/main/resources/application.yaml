@@ -13,7 +13,7 @@ spring:
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
-    password: #{REDIS_PASSWORD}
+    password: ${REDIS_PASSWORD}
     database: 0
   servlet:
     multipart:
