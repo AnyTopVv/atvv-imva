@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
     private UserDao userDao;
 
     @Override
-    public void addComment(AddVideoCommentDto addVideoCommentDto) {
+    public VideoCommentVo.UserComment addComment(AddVideoCommentDto addVideoCommentDto) {
         Long userId = UserContext.getUserId();
         Comment comment = new Comment();
         comment.setCommentContent(addVideoCommentDto.getCommentContent());
@@ -50,6 +50,12 @@ public class CommentServiceImpl implements CommentService {
         comment.setVideoId(addVideoCommentDto.getVideoId());
         comment.setCreateTime(new Date());
         commentDao.insert(comment);
+        VideoCommentVo.UserComment userComment = VideoCommentVo.UserComment.build(comment);
+        User user = userDao.findSampleInfoByUserId(userId);
+        userComment.setUserAvatar(QiNiuUtil.getDownloadUrl(user.getAvatar(),null));
+        userComment.setUserName(user.getUsername());
+        userComment.setUserLike(0);
+        return userComment;
     }
 
     @Override
