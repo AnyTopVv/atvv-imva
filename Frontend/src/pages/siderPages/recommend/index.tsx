@@ -43,7 +43,7 @@ const Recommend: React.FC = () => {
 
   useEffect(() => {
     if (isInComment && commentRefList.current[currentIndex.current].loadedCommentPage.current === 1) {
-      commentRefList.current[currentIndex.current].loadMoreData();
+      commentRefList.current[currentIndex.current].loadMoreData(videoQueue[currentIndex.current].uuid);
     }
   }, [isInComment])
 
@@ -62,7 +62,7 @@ const Recommend: React.FC = () => {
     playerRefList.current[pastIndex.current].pause();
     playerRefList.current[index].play();
     if (isInComment && commentRefList.current[index].loadedCommentPage.current === 1) {
-      commentRefList.current[index].loadMoreData();
+      commentRefList.current[index].loadMoreData(videoQueue[index].uuid);
     }
     currentIndex.current = index;
   }
@@ -211,7 +211,7 @@ const Recommend: React.FC = () => {
             };
             return <div key={index} style={{ display: 'flex' }} >
               <PubPlayer getRef={getRef} playerConfig={playerConfig} isFullscreen={isFullscreen} index={index} isInComment={isInComment} />
-              <CommentAreaForSlide getCommentRef={getCommentRef} isInComment={isInComment} videoId={videoData.uuid} />
+              <CommentAreaForSlide getCommentRef={getCommentRef} isInComment={isInComment} videoId={videoData.uuid} index={index} isFullscreen={isFullscreen} />
             </div>
           })}
         </Slider>
