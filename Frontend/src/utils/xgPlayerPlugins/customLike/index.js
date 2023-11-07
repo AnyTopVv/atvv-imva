@@ -1,9 +1,7 @@
 import {
   Plugin
 } from 'xgplayer'
-import {
-  likeVideo
-} from '../../../pages/videoPage/service';
+import { likeVideo } from '../../../pages/videoPage/service';
 
 const {
   POSITIONS
