@@ -3,7 +3,8 @@ import {
 } from 'xgplayer'
 import {
   likeVideo
-} from '@/pages/videoPage/service';
+} from '../../../pages/videoPage/service';
+
 
 const {
   POSITIONS
