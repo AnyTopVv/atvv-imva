@@ -23,7 +23,7 @@
         c.likes
     </sql>
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO comment (video_id, user_id, create_time, comment_content, likes, enable)
         VALUES (#{videoId}, #{userId}, #{createTime}, #{commentContent}, #{likes}, 0);
     </insert>
