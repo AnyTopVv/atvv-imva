@@ -21,9 +21,8 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/add")
-    public ResponseVO<Void> addComment(@RequestBody AddVideoCommentDto addVideoCommentDto){
-        commentService.addComment(addVideoCommentDto);
-        return ResponseVO.success();
+    public ResponseVO<VideoCommentVo.UserComment> addComment(@RequestBody AddVideoCommentDto addVideoCommentDto){
+        return ResponseVO.success(commentService.addComment(addVideoCommentDto));
     }
 
     @GetMapping("/list")
