@@ -3,7 +3,7 @@ import {
 } from 'xgplayer'
 import {
   starVideo
-} from '@/pages/videoPage/service';
+} from '../../../pages/videoPage/service';
 
 const {
   POSITIONS
