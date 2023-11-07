@@ -1,4 +1,14 @@
-# atvv-imva
+<p align="center">
+    <img alt="imva" src="assets/logo.png" width="220"/>
+</p>
+
+
+
+<h1 align="center">  atvv-imva  </h1>
+
+## atvv-imva是什么
+
+atvv-imva是一个于 [1024 创作节之校园编程马拉松 2023 - 七牛云](https://www.qiniu.com/activity/detail/651297ed0d50912d3d53307b?from=0005) 活动中诞生的项目，是一个类抖音的web端短视频平台，可提供给用户观看视频，上传水平，并进行交流互动。
 
 
 
