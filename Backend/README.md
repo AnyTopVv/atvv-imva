@@ -71,19 +71,19 @@ docker run -d --restart=always --name redis \
 
 2. 新建私有空间
 
-![image-20231107093003613](assets\image-20231107093003613.png)
+![image-20231107093003613](\assets\image-20231107093003613.png)
 
 3. 绑定CDN域名(可选)，也可选择测试域名(30天有效期)
 
-![image-20231107093134240](assets\image-20231107093134240.png)
+![image-20231107093134240](\assets\image-20231107093134240.png)
 
 4. 创建智能多媒体工作流
 
-![image-20231107093700652](assets\image-20231107093700652.png)
+![image-20231107093700652](\assets\image-20231107093700652.png)
 
-![image-20231107094028809](assets\image-20231107094028809.png)
+![image-20231107094028809](\assets\image-20231107094028809.png)
 
-![image-20231107094103312](assets\image-20231107094103312.png)
+![image-20231107094103312](\assets\image-20231107094103312.png)
 
 5. 获取账号 AccessKey和SecretKey
 
