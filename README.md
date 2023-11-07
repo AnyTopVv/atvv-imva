@@ -28,6 +28,7 @@ atvv-imva是一个于 [1024 创作节之校园编程马拉松 2023 - 七牛云](
 
 [API 文档](Backend/imva/src/main/resources/imva.html)
 
+在线API文档：[Apifox 接口文档](http://testqiniu.lazysun.me/imva.html#/)
 
 
 ## 架构设计文档
