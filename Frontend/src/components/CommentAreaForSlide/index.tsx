@@ -5,7 +5,7 @@ import { Space, message } from 'antd';
 import React from 'react';
 
 const CommentAreaForSlide = (props: any) => {
-  const { isInComment, videoId, getCommentRef } = props;
+  const { isInComment, videoId, getCommentRef, index, isFullscreen } = props;
   // 评论区所需变量
   const [isCommentLoading, setIsCommentLoading] = useState(false);
   const [commentData, setCommentData] = useState<any>([]);
@@ -52,6 +52,9 @@ const CommentAreaForSlide = (props: any) => {
         setCommentData(commentData.concat(res.data.data.userComments));
         loadedCommentPage.current++;
         setIsCommentLoading(false);
+        if (res.data.data.userComments.length < 10) {
+          setHasMore(false);
+        }
       } else {
         setHasMore(false);
       }
@@ -84,7 +87,7 @@ const CommentAreaForSlide = (props: any) => {
 
   return (
     <>
-      <CommentArea IconText={IconText} hasMore={hasMore} onSearch={onSearch} loadMoreData={loadMoreData} commentData={commentData} isInComment={isInComment} videoId={videoId} />
+      <CommentArea IconText={IconText} hasMore={hasMore} onSearch={onSearch} loadMoreData={loadMoreData} commentData={commentData} isInComment={isInComment} videoId={videoId} index={index} isFullscreen={isFullscreen} />
     </>
   )
 }
